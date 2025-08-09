@@ -24,8 +24,7 @@ export {
 export { useModal } from "./hooks/useModal";
 
 // Components (for manual integration)
-// Note: ModalProvider is available via direct import from "./components/ModalProvider"
 export { default as ModalRenderer } from "./components/ModalRenderer";
 
 // CSS styles
-import "./styles/aark-modal.css";
+import "./assets/styles/aark-modal.css";
