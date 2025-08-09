@@ -78,7 +78,7 @@
 	"author": "Mohammad Sumon",
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/sumonsbgc/aark-react-modalify.git"
+		"url": "git+https://github.com/sumonsbgc/aark-react-modalify.git"
 	},
 	"homepage": "https://github.com/sumonsbgc/aark-react-modalify#readme",
 	"bugs": {
