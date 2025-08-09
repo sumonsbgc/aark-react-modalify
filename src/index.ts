@@ -25,6 +25,3 @@ export { useModal } from "./hooks/useModal";
 
 // Components (for manual integration)
 export { default as ModalRenderer } from "./components/ModalRenderer";
-
-// CSS styles (automatically included)
-import "./assets/styles/aark-modal.css";

@@ -1,132 +1,66 @@
-/* AARK React Modalify - Custom CSS Styles */
-
-/* CSS Custom Properties (Variables) for easy customization */
+/* AARK React Modalify - Optimized CSS */
 :root {
   --aark-modal-overlay-bg: rgba(0, 0, 0, 0.5);
-  --aark-modal-overlay-blur: 2px;
-  --aark-modal-bg: #ffffff;
-  --aark-modal-border-radius: 8px;
+  --aark-modal-bg: #fff;
+  --aark-modal-radius: 8px;
   --aark-modal-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
-  --aark-modal-padding: 16px;
-  --aark-modal-z-index: 9999;
-  --aark-modal-content-z-index: 10000;
-
-  /* Close button colors */
-  --aark-modal-close-color: #666666;
-  --aark-modal-close-hover-bg: #f5f5f5;
-  --aark-modal-close-hover-color: #333333;
-  --aark-modal-close-focus-outline: #007bff;
-
-  /* Animation duration */
-  --aark-modal-animation-duration: 0.2s;
-  --aark-modal-fade-duration: 0.15s;
-
-  /* Custom overlay colors */
-  --aark-custom-overlay-bg: rgba(0, 0, 0, 0.8);
-  --aark-custom-overlay-blur: 5px;
-
-  /* Custom modal gradient colors */
-  --aark-custom-modal-gradient-start: #667eea;
-  --aark-custom-modal-gradient-end: #764ba2;
-  --aark-custom-modal-text-color: #ffffff;
-  --aark-custom-modal-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
-
-  /* Custom close button for gradient modal */
-  --aark-custom-modal-close-color: rgba(255, 255, 255, 0.8);
-  --aark-custom-modal-close-hover-bg: rgba(255, 255, 255, 0.2);
-  --aark-custom-modal-close-hover-color: #ffffff;
+  --aark-modal-pad: 16px;
+  --aark-modal-z: 9999;
+  --aark-close-color: #666;
+  --aark-close-hover: #f5f5f5;
+  --aark-anim: 0.2s;
 }
-
-/* Modal Container */
 .aark-modal-container {
   position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  z-index: var(--aark-modal-z-index);
+  inset: 0;
+  z-index: var(--aark-modal-z);
 }
-
 .aark-modal-container.notification {
   pointer-events: none;
 }
-
-/* Modal Overlay */
 .aark-modal-overlay {
   position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: var(--aark-modal-overlay-bg);
-  backdrop-filter: blur(var(--aark-modal-overlay-blur));
+  inset: 0;
+  background: var(--aark-modal-overlay-bg);
+  backdrop-filter: blur(2px);
 }
-
-/* Custom overlay for demo */
-.custom-overlay {
-  background-color: var(--aark-custom-overlay-bg) !important;
-  backdrop-filter: blur(var(--aark-custom-overlay-blur)) !important;
-}
-
-/* Modal Content */
 .aark-modal-content {
   position: fixed;
-  background-color: var(--aark-modal-bg);
-  border-radius: var(--aark-modal-border-radius);
+  background: var(--aark-modal-bg);
+  border-radius: var(--aark-modal-radius);
   box-shadow: var(--aark-modal-shadow);
-  padding: var(--aark-modal-padding);
-  z-index: var(--aark-modal-content-z-index);
+  padding: var(--aark-modal-pad);
+  z-index: calc(var(--aark-modal-z) + 1);
   max-width: 90vw;
   max-height: 90vh;
   overflow: auto;
 }
-
 .aark-modal-content.notification {
   pointer-events: auto;
 }
-
-/* Custom modal styling for demo */
-.aark-modal-content.custom-modal {
-  background: linear-gradient(
-    135deg,
-    var(--aark-custom-modal-gradient-start) 0%,
-    var(--aark-custom-modal-gradient-end) 100%
-  ) !important;
-  color: var(--aark-custom-modal-text-color) !important;
-  border: none !important;
-  box-shadow: var(--aark-custom-modal-shadow) !important;
-}
-
-/* Positioning */
 .aark-modal-content.center {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
 }
-
 .aark-modal-content.top-center {
   top: 20px;
   left: 50%;
   transform: translateX(-50%);
 }
-
 .aark-modal-content.top-right {
   top: 20px;
   right: 20px;
 }
-
 .aark-modal-content.bottom-right {
   bottom: 20px;
   right: 20px;
 }
-
 .aark-modal-content.bottom-center {
   bottom: 20px;
   left: 50%;
   transform: translateX(-50%);
 }
-
-/* Close Button */
 .aark-modal-close {
   position: absolute;
   top: 8px;
@@ -136,61 +70,42 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: none;
-  border: none;
-  color: var(--aark-modal-close-color);
+  background: 0;
+  border: 0;
+  color: var(--aark-close-color);
   cursor: pointer;
   border-radius: 50%;
   font-size: 14px;
   line-height: 1;
-  transition: all var(--aark-modal-animation-duration) ease;
+  transition: all var(--aark-anim);
 }
-
 .aark-modal-close:hover {
-  background-color: var(--aark-modal-close-hover-bg);
-  color: var(--aark-modal-close-hover-color);
+  background: var(--aark-close-hover);
+  color: #333;
 }
-
 .aark-modal-close:focus {
-  outline: 2px solid var(--aark-modal-close-focus-outline);
+  outline: 2px solid #007bff;
   outline-offset: 2px;
 }
-
-/* Close button for custom modal */
-.aark-modal-content.custom-modal .aark-modal-close {
-  color: var(--aark-custom-modal-close-color);
-}
-
-.aark-modal-content.custom-modal .aark-modal-close:hover {
-  background-color: var(--aark-custom-modal-close-hover-bg);
-  color: var(--aark-custom-modal-close-hover-color);
-}
-
-/* Modal Content Wrapper */
 .aark-modal-body {
   padding-top: 8px;
 }
-
-/* Animation */
 .aark-modal-container {
-  animation: aark-modal-fade-in var(--aark-modal-fade-duration) ease-out;
+  animation: f var(--aark-anim);
 }
-
 .aark-modal-content {
-  animation: aark-modal-slide-in var(--aark-modal-animation-duration) ease-out;
+  animation: s var(--aark-anim);
 }
-
-@keyframes aark-modal-fade-in {
-  from {
+@keyframes f {
+  0% {
     opacity: 0;
   }
   to {
     opacity: 1;
   }
 }
-
-@keyframes aark-modal-slide-in {
-  from {
+@keyframes s {
+  0% {
     opacity: 0;
     transform: translate(-50%, -50%) scale(0.95);
   }
@@ -199,22 +114,18 @@
     transform: translate(-50%, -50%) scale(1);
   }
 }
-
 .aark-modal-content.top-center {
-  animation: aark-modal-slide-down var(--aark-modal-animation-duration) ease-out;
+  animation: d var(--aark-anim);
 }
-
 .aark-modal-content.top-right,
 .aark-modal-content.bottom-right {
-  animation: aark-modal-slide-left var(--aark-modal-animation-duration) ease-out;
+  animation: l var(--aark-anim);
 }
-
 .aark-modal-content.bottom-center {
-  animation: aark-modal-slide-up var(--aark-modal-animation-duration) ease-out;
+  animation: u var(--aark-anim);
 }
-
-@keyframes aark-modal-slide-down {
-  from {
+@keyframes d {
+  0% {
     opacity: 0;
     transform: translateX(-50%) translateY(-10px);
   }
@@ -223,9 +134,8 @@
     transform: translateX(-50%) translateY(0);
   }
 }
-
-@keyframes aark-modal-slide-left {
-  from {
+@keyframes l {
+  0% {
     opacity: 0;
     transform: translateX(10px);
   }
@@ -234,9 +144,8 @@
     transform: translateX(0);
   }
 }
-
-@keyframes aark-modal-slide-up {
-  from {
+@keyframes u {
+  0% {
     opacity: 0;
     transform: translateX(-50%) translateY(10px);
   }
@@ -245,32 +154,26 @@
     transform: translateX(-50%) translateY(0);
   }
 }
-
-/* Responsive Design */
 @media (max-width: 768px) {
   .aark-modal-content {
     margin: 10px;
     max-width: calc(100vw - 20px);
   }
-
   .aark-modal-content.center {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
   }
-
   .aark-modal-content.top-center,
   .aark-modal-content.bottom-center {
     left: 50%;
     transform: translateX(-50%);
   }
-
   .aark-modal-content.top-right {
     right: 10px;
     left: auto;
     transform: none;
   }
-
   .aark-modal-content.bottom-right {
     right: 10px;
     bottom: 10px;

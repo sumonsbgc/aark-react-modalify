@@ -1,4 +1,4 @@
-import React from "react";
+import { createElement } from "react";
 import { createRoot, type Root } from "react-dom/client";
 import type { ReactNode } from "react";
 import type {
@@ -10,116 +10,89 @@ import type {
 
 type ModalListener = (event: ModalEvent) => void;
 
-class ModalManager {
-	private listeners: Set<ModalListener> = new Set();
-	private currentConfig: ModalConfig | null = null;
-	private container: HTMLDivElement | null = null;
-	private root: Root | null = null;
+const listeners = new Set<ModalListener>();
+let currentConfig: ModalConfig | null = null;
+let container: HTMLDivElement | null = null;
+let root: Root | null = null;
 
-	/**
-	 * Initialize the modal system
-	 */
-	private init(): void {
-		if (this.container) return;
+function init(): void {
+	if (container) return;
+	container = document.createElement("div");
+	container.id = "aark-react-modalify-root";
+	container.style.position = "relative";
+	container.style.zIndex = "9999";
+	document.body.appendChild(container);
+	import("../components/ModalProvider").then(({ default: ModalProvider }) => {
+		if (container) {
+			root = createRoot(container);
+			root.render(createElement(ModalProvider));
+		}
+	});
+}
 
-		// Create container for modals
-		this.container = document.createElement("div");
-		this.container.id = "aark-react-modalify-root";
-		this.container.style.position = "relative";
-		this.container.style.zIndex = "9999";
-		document.body.appendChild(this.container);
+function subscribe(listener: ModalListener): () => void {
+	listeners.add(listener);
+	return () => listeners.delete(listener);
+}
 
-		// Import and render ModalProvider dynamically to avoid circular dependency
-		import("../components/ModalProvider").then(({ default: ModalProvider }) => {
-			if (this.container) {
-				this.root = createRoot(this.container);
-				this.root.render(React.createElement(ModalProvider));
-			}
-		});
-	}
+function emit(type: ModalEventType, config?: ModalConfig): void {
+	const event: ModalEvent = { type, config };
+	listeners.forEach((listener) => listener(event));
+}
 
-	/**
-	 * Subscribe to modal events
-	 */
-	subscribe(listener: ModalListener): () => void {
-		this.listeners.add(listener);
-		return () => this.listeners.delete(listener);
-	}
-
-	/**
-	 * Emit modal events to all listeners
-	 */
-	private emit(type: ModalEventType, config?: ModalConfig): void {
-		const event: ModalEvent = { type, config };
-		this.listeners.forEach((listener) => listener(event));
-	}
-
-	/**
-	 * Open a modal with content and options
-	 */
-	fire(content: ReactNode, options?: ModalOptions): void {
-		// Initialize on first use
-		this.init();
-
-		const config: ModalConfig = {
-			content,
-			options: {
+function fire(content: ReactNode, options?: ModalOptions): void {
+	init();
+	const config: ModalConfig = {
+		content,
+		options: Object.assign(
+			{
 				position: "center",
 				mode: "modal",
 				showCloseIcon: true,
 				preventEscClose: false,
 				preventOverlayClose: false,
-				...options,
 			},
-		};
+			options
+		),
+	};
+	currentConfig = config;
+	emit("open", config);
+}
 
-		this.currentConfig = config;
-		this.emit("open", config);
-	}
-
-	/**
-	 * Close the current modal
-	 */
-	close(): void {
-		if (this.currentConfig) {
-			this.emit("beforeClose", this.currentConfig);
-			this.currentConfig = null;
-			this.emit("close");
-		}
-	}
-
-	/**
-	 * Check if a modal is currently open
-	 */
-	isOpen(): boolean {
-		return this.currentConfig !== null;
-	}
-
-	/**
-	 * Get the current modal configuration
-	 */
-	getCurrentConfig(): ModalConfig | null {
-		return this.currentConfig;
-	}
-
-	/**
-	 * Force close all modals (useful for cleanup)
-	 */
-	closeAll(): void {
-		this.close();
-	}
-
-	/**
-	 * Cleanup the modal system (useful for testing or when unmounting the app)
-	 */
-	cleanup(): void {
-		if (this.container && this.container.parentNode) {
-			this.container.parentNode.removeChild(this.container);
-			this.container = null;
-			this.root = null;
-		}
+function close(): void {
+	if (currentConfig) {
+		emit("beforeClose", currentConfig);
+		currentConfig = null;
+		emit("close");
 	}
 }
 
-// Create a singleton instance
-export const modalManager = new ModalManager();
+function isOpen(): boolean {
+	return currentConfig !== null;
+}
+
+function getCurrentConfig(): ModalConfig | null {
+	return currentConfig;
+}
+
+function closeAll(): void {
+	close();
+}
+
+function cleanup(): void {
+	if (container && container.parentNode) {
+		container.parentNode.removeChild(container);
+		container = null;
+		root = null;
+	}
+}
+
+export const modalManager = {
+	subscribe,
+	fire,
+	close,
+	isOpen,
+	getCurrentConfig,
+	closeAll,
+	cleanup,
+};
