@@ -1,7 +1,7 @@
 import React, { useEffect, useCallback } from 'react';
 import { createPortal } from 'react-dom';
 import type { ModalConfig } from '../types';
-import '../styles/aark-modal.css';
+import '../assets/styles/aark-modal.css';
 
 interface ModalRendererProps {
   config: ModalConfig;
