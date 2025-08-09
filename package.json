@@ -1,6 +1,6 @@
 {
 	"name": "aark-react-modalify",
-	"version": "1.0.3",
+	"version": "1.0.4",
 	"description": "A lightweight, flexible React modal and notification library with TypeScript support. Features automatic DOM mounting, customizable styling, and a simple imperative API for displaying modals, alerts, confirmations, and toast notifications.",
 	"private": false,
 	"main": "dist/index.cjs.js",
@@ -21,7 +21,7 @@
 		"LICENSE"
 	],
 	"scripts": {
-		"build": "npm run clean && npm run build:types && npm run build:lib",
+		"build": "npm run clean && npm run build:lib && npm run build:types",
 		"build:lib": "vite build --config vite.lib.config.ts",
 		"build:types": "tsc --project tsconfig.build.json --emitDeclarationOnly",
 		"clean": "rimraf dist",
