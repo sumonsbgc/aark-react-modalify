@@ -1,4 +1,5 @@
-import React, { useEffect, useCallback } from 'react';
+import type { FC, MouseEvent } from 'react';
+import { useEffect, useCallback } from 'react';
 import { createPortal } from 'react-dom';
 import type { ModalConfig } from '../types';
 import '../assets/styles/aark-modal.css';
@@ -8,7 +9,7 @@ interface ModalRendererProps {
   onClose: () => void;
 }
 
-const ModalRenderer: React.FC<ModalRendererProps> = ({ config, onClose }) => {
+const ModalRenderer: FC<ModalRendererProps> = ({ config, onClose }) => {
   const { content, options = {} } = config;
   const {
     position = 'center',
@@ -45,7 +46,7 @@ const ModalRenderer: React.FC<ModalRendererProps> = ({ config, onClose }) => {
 
   // Handle overlay click
   const handleOverlayClick = useCallback(
-    (event: React.MouseEvent) => {
+    (event: MouseEvent) => {
       if (event.target === event.currentTarget && !preventOverlayClose) {
         onClose();
       }
@@ -55,7 +56,7 @@ const ModalRenderer: React.FC<ModalRendererProps> = ({ config, onClose }) => {
 
   // Handle close button click
   const handleCloseClick = useCallback(
-    (event: React.MouseEvent) => {
+    (event: MouseEvent) => {
       event.stopPropagation();
       onClose();
     },
