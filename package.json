@@ -1,0 +1,73 @@
+{
+	"name": "aark-react-modalify",
+	"version": "1.0.0",
+	"description": "A simple, global modal/notification library for React with TypeScript and TailwindCSS.",
+	"main": "dist/index.cjs.js",
+	"module": "dist/index.esm.js",
+	"types": "dist/index.d.ts",
+	"type": "module",
+	"exports": {
+		".": {
+			"types": "./dist/index.d.ts",
+			"import": "./dist/index.esm.js",
+			"require": "./dist/index.cjs.js"
+		}
+	},
+	"files": [
+		"dist",
+		"src/styles/aark-modal.css",
+		"README.md",
+		"LICENSE"
+	],
+	"scripts": {
+		"build": "npm run clean && npm run build:types && npm run build:lib",
+		"build:lib": "vite build --config vite.lib.config.ts",
+		"build:types": "tsc --project tsconfig.build.json --emitDeclarationOnly",
+		"clean": "rimraf dist",
+		"dev": "vite",
+		"prepare": "npm run build",
+		"lint": "eslint src --ext .ts,.tsx",
+		"lint:fix": "eslint src --ext .ts,.tsx --fix",
+		"typecheck": "tsc --noEmit"
+	},
+	"keywords": [
+		"react",
+		"modal",
+		"notification",
+		"toast",
+		"popup",
+		"dialog",
+		"typescript",
+		"tailwindcss"
+	],
+	"peerDependencies": {
+		"react": ">=16.8.0",
+		"react-dom": ">=16.8.0"
+	},
+	"devDependencies": {
+		"@eslint/js": "^9.32.0",
+		"@types/react": "^19.1.9",
+		"@types/react-dom": "^19.1.7",
+		"@vitejs/plugin-react": "^4.7.0",
+		"eslint": "^9.32.0",
+		"eslint-plugin-react-hooks": "^5.2.0",
+		"eslint-plugin-react-refresh": "^0.4.20",
+		"globals": "^16.3.0",
+		"react": "^19.1.1",
+		"react-dom": "^19.1.1",
+		"rimraf": "^6.0.1",
+		"typescript": "~5.8.3",
+		"typescript-eslint": "^8.39.0",
+		"vite": "^7.1.0"
+	},
+	"license": "MIT",
+	"author": "Mohammad Sumon",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/sumonsbgc/aark-react-modalify.git"
+	},
+	"homepage": "https://github.com/sumonsbgc/aark-react-modalify#readme",
+	"bugs": {
+		"url": "https://github.com/sumonsbgc/aark-react-modalify/issues"
+	}
+}
