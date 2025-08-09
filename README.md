@@ -126,7 +126,7 @@ Get current theme values.
 
 ```typescript
 interface ModalOptions {
-	mode?: "modal" | "drawer" | "popup";
+	mode?: "modal" | "notification" | "popup";
 	position?: "center" | "top" | "bottom" | "left" | "right";
 	showCloseIcon?: boolean;
 	closeOnOverlayClick?: boolean;
