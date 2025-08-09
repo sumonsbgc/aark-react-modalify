@@ -213,7 +213,7 @@ npm run lint
 
 ## 📄 License
 
-MIT License - see the [LICENSE](LICENSE) file for details.
+Licensed under MIT
 
 ## 🤝 Contributing
 
