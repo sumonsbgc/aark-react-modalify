@@ -26,6 +26,12 @@ export default defineConfig({
 					"react-dom/client": "ReactDOMClient",
 				},
 				compact: true,
+				assetFileNames: (assetInfo) => {
+					if (assetInfo.name?.endsWith(".css")) {
+						return "aark-react-modalify.css";
+					}
+					return assetInfo.name || "asset";
+				},
 			},
 		},
 		minify: "terser",

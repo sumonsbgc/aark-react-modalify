@@ -2,7 +2,8 @@ import type { FC, MouseEvent } from 'react';
 import { useEffect, useCallback } from 'react';
 import { createPortal } from 'react-dom';
 import type { ModalConfig } from '../types';
-import '../assets/styles/aark-modal.css';
+import { injectStyles } from '../utils/inject-styles';
+import { MODAL_CSS } from '../utils/modal-css';
 
 interface ModalRendererProps {
   config: ModalConfig;
@@ -21,6 +22,11 @@ const ModalRenderer: FC<ModalRendererProps> = ({ config, onClose }) => {
     preventEscClose = false,
     preventOverlayClose = false,
   } = options;
+
+  // Inject styles on first render
+  useEffect(() => {
+    injectStyles(MODAL_CSS, 'aark-modal-styles');
+  }, []);
 
   // Handle auto close for notifications
   useEffect(() => {
