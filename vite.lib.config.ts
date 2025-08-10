@@ -27,10 +27,10 @@ export default defineConfig({
 				},
 				compact: true,
 				assetFileNames: (assetInfo) => {
-					if (assetInfo.name?.endsWith(".css")) {
+					if (assetInfo.names && assetInfo.names[0]?.endsWith(".css")) {
 						return "aark-react-modalify.css";
 					}
-					return assetInfo.name || "asset";
+					return assetInfo.names?.[0] || "asset";
 				},
 			},
 		},
