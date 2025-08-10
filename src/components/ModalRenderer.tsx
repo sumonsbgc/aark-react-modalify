@@ -67,6 +67,9 @@ const ModalRenderer: FC<ModalRendererProps> = ({ config, onClose }) => {
   const contentClasses = `aark-modal-content ${position} ${mode === 'notification' ? 'notification' : ''} ${className}`.trim();
   const overlayClasses = `aark-modal-overlay ${overlayClassName}`.trim();
 
+  // Get the modal container or fallback to document.body
+  const modalContainer = document.getElementById('aark-react-modalify-root') || document.body;
+
   return createPortal(
     <div className={containerClasses}>
       {mode === 'modal' && (
@@ -97,7 +100,7 @@ const ModalRenderer: FC<ModalRendererProps> = ({ config, onClose }) => {
         </div>
       </div>
     </div>,
-    document.body
+    modalContainer
   );
 };
 
