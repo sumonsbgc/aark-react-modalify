@@ -1,9 +1,10 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
+import type { FC } from 'react';
 import { aark } from './index';
 import './App.css';
 
 // Demo component to show how the library works
-const MyModalContent: React.FC = () => (
+const MyModalContent: FC = () => (
   <div style={{ padding: '24px', maxWidth: '400px' }}>
     <h2 style={{ fontSize: '24px', fontWeight: 'bold', marginBottom: '16px', color: '#333' }}>
       Demo Modal
@@ -36,16 +37,45 @@ const MyModalContent: React.FC = () => (
   </div>
 );
 
-const NotificationContent: React.FC = () => (
+const SuccessNotification: FC = () => (
   <div style={{
-    backgroundColor: '#28a745',
-    color: 'white',
-    padding: '16px',
-    borderRadius: '8px',
-    boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)'
+    display: 'flex',
+    alignItems: 'center',
+    gap: '12px'
   }}>
-    <h3 style={{ fontWeight: 'bold', fontSize: '18px', margin: '0 0 8px 0' }}>Success!</h3>
-    <p style={{ margin: 0 }}>This notification will auto-close in 3 seconds</p>
+    <div style={{ fontSize: '24px', color: '#28a745' }}>✅</div>
+    <div>
+      <h3 style={{ fontWeight: 'bold', fontSize: '16px', margin: '0 0 4px 0', color: '#333' }}>Success!</h3>
+      <p style={{ margin: 0, color: '#666', fontSize: '14px' }}>This notification will auto-close in 3 seconds</p>
+    </div>
+  </div>
+);
+
+const ErrorNotification: FC = () => (
+  <div style={{
+    display: 'flex',
+    alignItems: 'center',
+    gap: '12px'
+  }}>
+    <div style={{ fontSize: '24px', color: '#dc3545' }}>❌</div>
+    <div>
+      <h3 style={{ fontWeight: 'bold', fontSize: '16px', margin: '0 0 4px 0', color: '#333' }}>Error!</h3>
+      <p style={{ margin: 0, color: '#666', fontSize: '14px' }}>Something went wrong. Please try again.</p>
+    </div>
+  </div>
+);
+
+const InfoNotification: FC = () => (
+  <div style={{
+    display: 'flex',
+    alignItems: 'center',
+    gap: '12px'
+  }}>
+    <div style={{ fontSize: '24px', color: '#17a2b8' }}>ℹ️</div>
+    <div>
+      <h3 style={{ fontWeight: 'bold', fontSize: '16px', margin: '0 0 4px 0', color: '#333' }}>Info</h3>
+      <p style={{ margin: 0, color: '#666', fontSize: '14px' }}>Here's some useful information for you.</p>
+    </div>
   </div>
 );
 
@@ -56,7 +86,7 @@ function App() {
       aark.fire(
         <div style={{ textAlign: 'center', padding: '24px' }}>
           <div style={{ fontSize: '48px', marginBottom: '16px' }}>👋</div>
-          <h2 style={{ fontSize: '24px', fontWeight: 'bold', marginBottom: '16px' }}>
+          <h2 style={{ fontSize: '24px', fontWeight: 'bold', marginBottom: '16px', color: "#121212" }}>
             Welcome to AARK React Modalify!
           </h2>
           <p style={{ color: '#666', marginBottom: '16px' }}>
@@ -79,6 +109,7 @@ function App() {
         {
           position: 'center',
           preventOverlayClose: true,
+          showCloseIcon: true,
         }
       );
     }, 500);
@@ -87,20 +118,35 @@ function App() {
   }, []);
 
   const showBasicModal = () => {
-    aark.fire(<MyModalContent />);
+    aark.modal(<MyModalContent />);
   };
 
   const showNotification = () => {
-    aark.fire(<NotificationContent />, {
-      mode: 'notification',
+    aark.notification(<SuccessNotification />, {
       position: 'top-right',
       autoCloseTime: 3000,
       showCloseIcon: false,
     });
   };
 
+  const showErrorNotification = () => {
+    aark.notification(<ErrorNotification />, {
+      position: 'top-center',
+      autoCloseTime: 4000,
+      showCloseIcon: true,
+    });
+  };
+
+  const showInfoNotification = () => {
+    aark.notification(<InfoNotification />, {
+      position: 'bottom-right',
+      autoCloseTime: 5000,
+      showCloseIcon: true,
+    });
+  };
+
   const showCustomModal = () => {
-    aark.fire(
+    aark.modal(
       <div style={{ padding: '24px', textAlign: 'center' }}>
         <div style={{ fontSize: '72px', marginBottom: '16px' }}>🎨</div>
         <h2 style={{ fontSize: '24px', fontWeight: 'bold', marginBottom: '16px' }}>
@@ -130,10 +176,10 @@ function App() {
   };
 
   const showConfirmModal = () => {
-    aark.fire(
+    aark.modal(
       <div style={{ padding: '24px', textAlign: 'center' }}>
         <div style={{ fontSize: '60px', marginBottom: '16px', color: '#dc3545' }}>⚠️</div>
-        <h2 style={{ fontSize: '20px', fontWeight: 'bold', marginBottom: '16px' }}>
+        <h2 style={{ fontSize: '20px', fontWeight: 'bold', marginBottom: '16px', color: "#000" }}>
           Are you sure?
         </h2>
         <p style={{ color: '#666', marginBottom: '24px' }}>This action cannot be undone.</p>
@@ -229,10 +275,10 @@ function App() {
 
           <div style={cardStyle}>
             <h3 style={{ fontSize: '20px', fontWeight: 'bold', marginBottom: '16px' }}>
-              Notification
+              Success Notification
             </h3>
             <p style={{ color: '#666', marginBottom: '16px' }}>
-              Auto-closing notification in top-right corner
+              Auto-closing success notification in top-right corner
             </p>
             <button
               onClick={showNotification}
@@ -240,7 +286,41 @@ function App() {
               onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#1e7e34'}
               onMouseOut={(e) => e.currentTarget.style.backgroundColor = '#28a745'}
             >
-              Show Notification
+              Show Success
+            </button>
+          </div>
+
+          <div style={cardStyle}>
+            <h3 style={{ fontSize: '20px', fontWeight: 'bold', marginBottom: '16px' }}>
+              Error Notification
+            </h3>
+            <p style={{ color: '#666', marginBottom: '16px' }}>
+              Error notification in top-center with close button
+            </p>
+            <button
+              onClick={showErrorNotification}
+              style={{ ...buttonStyle, backgroundColor: '#dc3545' }}
+              onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#c82333'}
+              onMouseOut={(e) => e.currentTarget.style.backgroundColor = '#dc3545'}
+            >
+              Show Error
+            </button>
+          </div>
+
+          <div style={cardStyle}>
+            <h3 style={{ fontSize: '20px', fontWeight: 'bold', marginBottom: '16px' }}>
+              Info Notification
+            </h3>
+            <p style={{ color: '#666', marginBottom: '16px' }}>
+              Information notification in bottom-right corner
+            </p>
+            <button
+              onClick={showInfoNotification}
+              style={{ ...buttonStyle, backgroundColor: '#17a2b8' }}
+              onMouseOver={(e) => e.currentTarget.style.backgroundColor = '#138496'}
+              onMouseOut={(e) => e.currentTarget.style.backgroundColor = '#17a2b8'}
+            >
+              Show Info
             </button>
           </div>
 
@@ -295,12 +375,23 @@ function App() {
           }}>
             <pre>{`import { aark } from 'aark-react-modalify';
 
-aark.fire(
+// Show a modal
+aark.modal(
   <MyComponent />, 
   {
-    mode: "modal",
     position: "center",
     showCloseIcon: true,
+    preventOverlayClose: false,
+  }
+);
+
+// Show a notification  
+aark.notification(
+  <MyNotification />,
+  {
+    position: "top-right",
+    autoCloseTime: 3000,
+    showCloseIcon: false,
   }
 );`}</pre>
           </div>

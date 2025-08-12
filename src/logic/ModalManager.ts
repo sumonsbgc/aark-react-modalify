@@ -1,9 +1,13 @@
 import { createElement } from "react";
 import { createRoot, type Root } from "react-dom/client";
 import type { ReactNode } from "react";
+import ModalProvider from "../components/ModalProvider";
 import type {
 	ModalConfig,
+	NotificationConfig,
+	ComponentConfig,
 	ModalOptions,
+	NotificationOptions,
 	ModalEvent,
 	ModalEventType,
 } from "../types";
@@ -11,7 +15,7 @@ import type {
 type ModalListener = (event: ModalEvent) => void;
 
 const listeners = new Set<ModalListener>();
-let currentConfig: ModalConfig | null = null;
+let currentConfig: ComponentConfig | null = null;
 let container: HTMLDivElement | null = null;
 let root: Root | null = null;
 
@@ -22,12 +26,10 @@ function init(): void {
 	container.style.position = "relative";
 	container.style.zIndex = "9999";
 	document.body.appendChild(container);
-	import("../components/ModalProvider").then(({ default: ModalProvider }) => {
-		if (container) {
-			root = createRoot(container);
-			root.render(createElement(ModalProvider));
-		}
-	});
+	if (container) {
+		root = createRoot(container);
+		root.render(createElement(ModalProvider));
+	}
 }
 
 function subscribe(listener: ModalListener): () => void {
@@ -35,19 +37,19 @@ function subscribe(listener: ModalListener): () => void {
 	return () => listeners.delete(listener);
 }
 
-function emit(type: ModalEventType, config?: ModalConfig): void {
+function emit(type: ModalEventType, config?: ComponentConfig): void {
 	const event: ModalEvent = { type, config };
 	listeners.forEach((listener) => listener(event));
 }
 
-function fire(content: ReactNode, options?: ModalOptions): void {
+function fireModal(content: ReactNode, options?: ModalOptions): void {
 	init();
 	const config: ModalConfig = {
 		content,
+		mode: "modal",
 		options: Object.assign(
 			{
 				position: "center",
-				mode: "modal",
 				showCloseIcon: true,
 				preventEscClose: false,
 				preventOverlayClose: false,
@@ -57,6 +59,33 @@ function fire(content: ReactNode, options?: ModalOptions): void {
 	};
 	currentConfig = config;
 	emit("open", config);
+}
+
+function fireNotification(
+	content: ReactNode,
+	options?: NotificationOptions
+): void {
+	init();
+	const config: NotificationConfig = {
+		content,
+		mode: "notification",
+		options: Object.assign(
+			{
+				position: "top-right",
+				showCloseIcon: true,
+				autoCloseTime: 5000,
+				preventEscClose: false,
+			},
+			options
+		),
+	};
+	currentConfig = config;
+	emit("open", config);
+}
+
+function fire(content: ReactNode, options?: ModalOptions): void {
+	// Legacy method - defaults to modal
+	fireModal(content, options);
 }
 
 function close(): void {
@@ -71,7 +100,7 @@ function isOpen(): boolean {
 	return currentConfig !== null;
 }
 
-function getCurrentConfig(): ModalConfig | null {
+function getCurrentConfig(): ComponentConfig | null {
 	return currentConfig;
 }
 
@@ -90,6 +119,8 @@ function cleanup(): void {
 export const modalManager = {
 	subscribe,
 	fire,
+	fireModal,
+	fireNotification,
 	close,
 	isOpen,
 	getCurrentConfig,

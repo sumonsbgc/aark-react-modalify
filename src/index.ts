@@ -4,9 +4,13 @@ export { default as aark } from "./logic/aark";
 // Types
 export type {
 	ModalOptions,
+	NotificationOptions,
 	ModalPosition,
+	NotificationPosition,
 	ModalMode,
 	ModalConfig,
+	NotificationConfig,
+	ComponentConfig,
 	ModalState,
 	ModalEvent,
 	ModalEventType,
@@ -24,4 +28,6 @@ export {
 export { useModal } from "./hooks/useModal";
 
 // Components (for manual integration)
-export { default as ModalRenderer } from "./components/ModalRenderer";
+export { default as Modal } from "./components/Modal";
+export { default as Notification } from "./components/Notification";
+export { default as ModalProvider } from "./components/ModalProvider";

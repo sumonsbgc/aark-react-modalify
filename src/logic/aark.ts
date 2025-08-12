@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import type { ModalOptions } from "../types";
+import type { ModalOptions, NotificationOptions } from "../types";
 import { modalManager } from "./ModalManager";
 import type { AarkModalTheme } from "../utils/theme";
 import {
@@ -9,7 +9,12 @@ import {
 } from "../utils/theme";
 
 const aark = {
-	fire: (content: ReactNode, options?: ModalOptions) => modalManager.fire(content, options),
+	fire: (content: ReactNode, options?: ModalOptions) =>
+		modalManager.fire(content, options),
+	modal: (content: ReactNode, options?: ModalOptions) =>
+		modalManager.fireModal(content, options),
+	notification: (content: ReactNode, options?: NotificationOptions) =>
+		modalManager.fireNotification(content, options),
 	close: () => modalManager.close(),
 	isOpen: () => modalManager.isOpen(),
 	closeAll: () => modalManager.closeAll(),

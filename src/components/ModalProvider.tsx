@@ -1,6 +1,7 @@
 import type { FC } from 'react';
 import { useModal } from '../hooks/useModal';
-import ModalRenderer from './ModalRenderer';
+import Modal from './Modal';
+import Notification from './Notification';
 
 /**
  * ModalProvider component that renders modals globally
@@ -13,7 +14,15 @@ const ModalProvider: FC = () => {
     return null;
   }
 
-  return <ModalRenderer config={config} onClose={close} />;
+  if (config.mode === 'modal') {
+    return <Modal config={config} onClose={close} />;
+  }
+
+  if (config.mode === 'notification') {
+    return <Notification config={config} onClose={close} />;
+  }
+
+  return null;
 };
 
 export default ModalProvider;

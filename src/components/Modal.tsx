@@ -2,39 +2,29 @@ import type { FC, MouseEvent } from 'react';
 import { useEffect, useCallback } from 'react';
 import { createPortal } from 'react-dom';
 import type { ModalConfig } from '../types';
-import { injectStyles } from '../utils/inject-styles';
-import { MODAL_CSS } from '../utils/modal-css';
+import '../assets/styles/aark-modal.css';
+import Icon from './Icon';
 
-interface ModalRendererProps {
+interface ModalProps {
   config: ModalConfig;
   onClose: () => void;
 }
 
-const ModalRenderer: FC<ModalRendererProps> = ({ config, onClose }) => {
+const Modal: FC<ModalProps> = ({ config, onClose }) => {
   const { content, options = {} } = config;
   const {
     position = 'center',
-    mode = 'modal',
     showCloseIcon = true,
-    autoCloseTime,
     className = '',
     overlayClassName = '',
     preventEscClose = false,
     preventOverlayClose = false,
   } = options;
 
-  // Inject styles on first render
-  useEffect(() => {
-    injectStyles(MODAL_CSS, 'aark-modal-styles');
-  }, []);
-
-  // Handle auto close for notifications
-  useEffect(() => {
-    if (autoCloseTime && mode === 'notification') {
-      const timer = setTimeout(onClose, autoCloseTime);
-      return () => clearTimeout(timer);
-    }
-  }, [autoCloseTime, mode, onClose]);
+  // CSS is now imported at the top of the file
+  // useEffect(() => {
+  //   injectStyles(MODAL_CSS, 'aark-modal-styles');
+  // }, []);
 
   // Handle keyboard events
   useEffect(() => {
@@ -69,37 +59,43 @@ const ModalRenderer: FC<ModalRendererProps> = ({ config, onClose }) => {
     [onClose]
   );
 
-  const containerClasses = `aark-modal-container ${mode === 'notification' ? 'notification' : ''}`;
-  const contentClasses = `aark-modal-content ${position} ${mode === 'notification' ? 'notification' : ''} ${className}`.trim();
-  const overlayClasses = `aark-modal-overlay ${overlayClassName}`.trim();
+  const contentClasses = `aark-modal-content ${position} ${className}`.trim();
 
   // Get the modal container or fallback to document.body
   const modalContainer = document.getElementById('aark-react-modalify-root') || document.body;
 
   return createPortal(
-    <div className={containerClasses}>
-      {mode === 'modal' && (
-        <div
-          className={overlayClasses}
-          onClick={handleOverlayClick}
-          aria-hidden="true"
-        />
-      )}
+    <div
+      className={`aark-modal-overlay ${overlayClassName}`.trim()}
+      onClick={handleOverlayClick}
+      aria-hidden="true"
+      style={{
+        position: 'fixed',
+        inset: 0,
+        zIndex: 'var(--aark-modal-z)',
+        background: 'var(--aark-modal-overlay-bg)',
+        backdropFilter: 'blur(2px)',
+        animation: 'fade-in var(--aark-anim)'
+      }}
+    >
       <div
         className={contentClasses}
         role="dialog"
         aria-modal="true"
         aria-labelledby="aark-modal-content"
+        onClick={(e) => e.stopPropagation()}
       >
         {showCloseIcon && (
-          <button
-            onClick={handleCloseClick}
-            className="aark-modal-close"
-            aria-label="Close modal"
-            type="button"
-          >
-            ×
-          </button>
+          <header className="aark-modal-header">
+            <button
+              onClick={handleCloseClick}
+              className="aark-modal-close"
+              aria-label="Close modal"
+              type="button"
+            >
+              <Icon name="close" size={12} />
+            </button>
+          </header>
         )}
         <div id="aark-modal-content" className="aark-modal-body">
           {content}
@@ -110,4 +106,4 @@ const ModalRenderer: FC<ModalRendererProps> = ({ config, onClose }) => {
   );
 };
 
-export default ModalRenderer;
+export default Modal;

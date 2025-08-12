@@ -1,6 +1,6 @@
 {
 	"name": "aark-react-modalify",
-	"version": "1.0.4",
+	"version": "1.0.5",
 	"description": "A lightweight, flexible React modal and notification library with TypeScript support. Features automatic DOM mounting, customizable styling, and a simple imperative API for displaying modals, alerts, confirmations, and toast notifications.",
 	"private": false,
 	"main": "dist/index.cjs.js",
@@ -12,6 +12,11 @@
 			"types": "./dist/index.d.ts",
 			"import": "./dist/index.esm.js",
 			"require": "./dist/index.cjs.js"
+		},
+		"./styles": {
+			"types": "./dist/index-with-styles.d.ts",
+			"import": "./dist/index-with-styles.esm.js",
+			"require": "./dist/index-with-styles.cjs.js"
 		}
 	},
 	"files": [

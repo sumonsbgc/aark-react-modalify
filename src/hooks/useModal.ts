@@ -1,10 +1,10 @@
 import { useEffect, useState, useCallback } from "react";
 import { modalManager } from "../logic/ModalManager";
-import type { ModalConfig, ModalEvent } from "../types";
+import type { ComponentConfig, ModalEvent } from "../types";
 
 export interface UseModalReturn {
 	isOpen: boolean;
-	config: ModalConfig | null;
+	config: ComponentConfig | null;
 	close: () => void;
 }
 
@@ -13,7 +13,7 @@ export interface UseModalReturn {
  */
 export function useModal(): UseModalReturn {
 	const [isOpen, setIsOpen] = useState(false);
-	const [config, setConfig] = useState<ModalConfig | null>(null);
+	const [config, setConfig] = useState<ComponentConfig | null>(null);
 
 	const close = useCallback(() => {
 		modalManager.close();
