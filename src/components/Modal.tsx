@@ -4,6 +4,7 @@ import { createPortal } from 'react-dom';
 import type { ModalConfig } from '../types';
 import '../assets/styles/aark-modal.css';
 import Icon from './Icon';
+import StandardModal from './modals/StandardModal';
 
 interface ModalProps {
   config: ModalConfig;
@@ -11,7 +12,7 @@ interface ModalProps {
 }
 
 const Modal: FC<ModalProps> = ({ config, onClose }) => {
-  const { content, options = {} } = config;
+  const { content, props, options = {} } = config;
   const {
     position = 'center',
     showCloseIcon = true,
@@ -64,6 +65,60 @@ const Modal: FC<ModalProps> = ({ config, onClose }) => {
   // Get the modal container or fallback to document.body
   const modalContainer = document.getElementById('aark-react-modalify-root') || document.body;
 
+  // Render content based on whether it's props-based or component-based
+  const renderContent = () => {
+    if (props) {
+      // Props-based modal - direct StandardModal
+      return (
+        <div
+          className={contentClasses}
+          role="dialog"
+          aria-modal="true"
+          onClick={(e) => e.stopPropagation()}
+        >
+          {showCloseIcon && (
+            <button
+              onClick={handleCloseClick}
+              className="aark-modal-close"
+              aria-label="Close Modal"
+              type="button"
+            >
+              <Icon name="close" size={12} />
+            </button>
+          )}
+          <StandardModal props={props} onClose={onClose} />
+        </div>
+      );
+    } else if (content) {
+      // Component-based modal
+      return (
+        <div
+          className={contentClasses}
+          role="dialog"
+          aria-modal="true"
+          onClick={(e) => e.stopPropagation()}
+        >
+          {showCloseIcon && (
+            <header className="aark-modal-header">
+              <button
+                onClick={handleCloseClick}
+                className="aark-modal-close"
+                aria-label="Close Modal"
+                type="button"
+              >
+                <Icon name="close" size={12} />
+              </button>
+            </header>
+          )}
+          <div className="aark-modal-body">
+            {content}
+          </div>
+        </div>
+      );
+    }
+    return null;
+  };
+
   return createPortal(
     <div
       className={`aark-modal-overlay ${overlayClassName}`.trim()}
@@ -75,32 +130,14 @@ const Modal: FC<ModalProps> = ({ config, onClose }) => {
         zIndex: 'var(--aark-modal-z)',
         background: 'var(--aark-modal-overlay-bg)',
         backdropFilter: 'blur(2px)',
-        animation: 'fade-in var(--aark-anim)'
+        animation: 'fade-in var(--aark-anim)',
+        display: 'flex',
+        alignItems: position.includes('center') ? 'center' : position.includes('top') ? 'flex-start' : 'flex-end',
+        justifyContent: position.includes('center') ? 'center' : position.includes('right') ? 'flex-end' : 'flex-start',
+        padding: '1rem'
       }}
     >
-      <div
-        className={contentClasses}
-        role="dialog"
-        aria-modal="true"
-        aria-labelledby="aark-modal-content"
-        onClick={(e) => e.stopPropagation()}
-      >
-        {showCloseIcon && (
-          <header className="aark-modal-header">
-            <button
-              onClick={handleCloseClick}
-              className="aark-modal-close"
-              aria-label="Close modal"
-              type="button"
-            >
-              <Icon name="close" size={12} />
-            </button>
-          </header>
-        )}
-        <div id="aark-modal-content" className="aark-modal-body">
-          {content}
-        </div>
-      </div>
+      {renderContent()}
     </div>,
     modalContainer
   );

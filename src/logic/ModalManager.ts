@@ -10,6 +10,8 @@ import type {
 	NotificationOptions,
 	ModalEvent,
 	ModalEventType,
+	ModalProps,
+	NotificationProps,
 } from "../types";
 
 type ModalListener = (event: ModalEvent) => void;
@@ -42,10 +44,34 @@ function emit(type: ModalEventType, config?: ComponentConfig): void {
 	listeners.forEach((listener) => listener(event));
 }
 
-function fireModal(content: ReactNode, options?: ModalOptions): void {
+function fireModal(
+	contentOrProps: ReactNode | ModalProps,
+	options?: ModalOptions
+): void {
 	init();
+
+	let content: ReactNode | undefined;
+	let props: ModalProps | undefined;
+
+	// Determine if first argument is props object or React component
+	if (
+		contentOrProps &&
+		typeof contentOrProps === "object" &&
+		!("$$typeof" in contentOrProps) &&
+		!Array.isArray(contentOrProps)
+	) {
+		// It's a props object
+		props = contentOrProps as ModalProps;
+		content = undefined;
+	} else {
+		// It's a React component/element
+		content = contentOrProps as ReactNode;
+		props = undefined;
+	}
+
 	const config: ModalConfig = {
 		content,
+		props,
 		mode: "modal",
 		options: Object.assign(
 			{
@@ -62,12 +88,33 @@ function fireModal(content: ReactNode, options?: ModalOptions): void {
 }
 
 function fireNotification(
-	content: ReactNode,
+	contentOrProps: ReactNode | NotificationProps,
 	options?: NotificationOptions
 ): void {
 	init();
+
+	let content: ReactNode | undefined;
+	let props: NotificationProps | undefined;
+
+	// Determine if first argument is props object or React component
+	if (
+		contentOrProps &&
+		typeof contentOrProps === "object" &&
+		!("$$typeof" in contentOrProps) &&
+		!Array.isArray(contentOrProps)
+	) {
+		// It's a props object
+		props = contentOrProps as NotificationProps;
+		content = undefined;
+	} else {
+		// It's a React component/element
+		content = contentOrProps as ReactNode;
+		props = undefined;
+	}
+
 	const config: NotificationConfig = {
 		content,
+		props,
 		mode: "notification",
 		options: Object.assign(
 			{
@@ -83,9 +130,12 @@ function fireNotification(
 	emit("open", config);
 }
 
-function fire(content: ReactNode, options?: ModalOptions): void {
+function fire(
+	contentOrProps: ReactNode | ModalProps,
+	options?: ModalOptions
+): void {
 	// Legacy method - defaults to modal
-	fireModal(content, options);
+	fireModal(contentOrProps, options);
 }
 
 function close(): void {

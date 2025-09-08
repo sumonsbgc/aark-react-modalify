@@ -11,69 +11,51 @@
   --aark-anim: 0.2s;
 }
 
-.aark-modal-content {
-  position: fixed;
-  background: var(--aark-modal-bg);
-  border-radius: var(--aark-modal-radius);
-  box-shadow: var(--aark-modal-shadow);
-  padding: var(--aark-modal-pad);
-  z-index: calc(var(--aark-modal-z) + 1);
-  max-width: 90vw;
-  min-width: 280px;
-  max-height: 90vh;
-  overflow: auto;
-}
 .aark-modal-content.notification {
   pointer-events: auto;
-  background: var(--aark-modal-bg);
-  box-shadow: var(--aark-modal-shadow);
-  padding: var(--aark-modal-pad);
   width: auto;
   max-width: 400px;
   min-width: 280px;
-  border-radius: var(--aark-modal-radius);
+}
+
+/* Responsive behavior for notifications */
+@media (max-width: 768px) {
+  .aark-modal-content.notification {
+    max-width: calc(100vw - 40px);
+    min-width: auto;
+  }
+}
+
+@media (max-width: 480px) {
+  .aark-modal-content.notification {
+    max-width: calc(100vw - 20px);
+  }
 }
 .aark-modal-content.center {
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
   animation: scale-in var(--aark-anim);
 }
 .aark-modal-content.top-center {
-  top: 20px;
-  left: 50%;
-  transform: translateX(-50%);
   animation: slide-down var(--aark-anim);
 }
 .aark-modal-content.top-right {
-  top: 20px;
-  right: 20px;
   animation: slide-left var(--aark-anim);
 }
 .aark-modal-content.top-left {
-  top: 20px;
-  left: 20px;
   animation: slide-right var(--aark-anim);
 }
 .aark-modal-content.bottom-right {
-  bottom: 20px;
-  right: 20px;
   animation: slide-left var(--aark-anim);
 }
 .aark-modal-content.bottom-left {
-  bottom: 20px;
-  left: 20px;
   animation: slide-right var(--aark-anim);
 }
 .aark-modal-content.bottom-center {
-  bottom: 20px;
-  left: 50%;
-  transform: translateX(-50%);
   animation: slide-up var(--aark-anim);
 }
 .aark-modal-header {
   position: relative;
-  padding-bottom: 6px;
+  padding-bottom: 0;
+  margin-bottom: 0;
 }
 .aark-modal-close {
   position: absolute;
@@ -93,6 +75,7 @@
   font-size: 14px;
   line-height: 1;
   transition: all var(--aark-anim);
+  z-index: 10;
 }
 .aark-modal-close:hover {
   background: var(--aark-close-hover);
@@ -103,7 +86,189 @@
   outline-offset: 2px;
 }
 .aark-modal-body {
-  padding-top: 0px;
+  background: var(--aark-modal-bg);
+  border-radius: var(--aark-modal-radius);
+  box-shadow: var(--aark-modal-shadow);
+  padding: var(--aark-modal-pad);
+  max-height: 90vh;
+  overflow: auto;
+  margin: auto;
+
+  width: 100%;
+  max-width: 700px;
+  min-width: 320px;
+}
+
+/* Modal wrapper for props-based modals - no styling, just container */
+.aark-modal-wrapper {
+  width: 100%;
+  height: 100%;
+}
+
+/* StandardModal - Now has the container styling */
+.aark-standard-modal {
+  background: var(--aark-modal-bg);
+  border-radius: var(--aark-modal-radius);
+  box-shadow: var(--aark-modal-shadow);
+  padding: var(--aark-modal-pad);
+  max-height: 90vh;
+  overflow: auto;
+  margin: auto;
+  display: flex;
+  flex-direction: column;
+
+  /* Default responsive behavior */
+  width: 100%;
+  max-width: 700px;
+  min-width: 280px;
+}
+
+/* Mobile devices (up to 768px) */
+@media (max-width: 768px) {
+  .aark-standard-modal {
+    width: calc(100vw - 24px);
+    max-width: calc(100vw - 24px);
+    margin: 12px;
+  }
+}
+
+/* Small mobile devices (up to 480px) */
+@media (max-width: 480px) {
+  .aark-standard-modal {
+    width: calc(100vw - 16px);
+    max-width: calc(100vw - 16px);
+    margin: 8px;
+    max-height: calc(100vh - 40px);
+  }
+}
+
+/* Tablet and larger devices (768px and up) */
+@media (min-width: 769px) {
+  .aark-standard-modal {
+    max-width: 700px;
+  }
+}
+
+/* Desktop and larger devices (1024px and up) */
+@media (min-width: 1024px) {
+  .aark-standard-modal {
+    max-width: 700px;
+  }
+}
+
+/* Large desktop devices (1440px and up) */
+@media (min-width: 1440px) {
+  .aark-standard-modal {
+    max-width: 700px;
+  }
+}
+
+/* Component-wise modal responsive behavior - matches StandardModal */
+/* Mobile devices (up to 768px) */
+@media (max-width: 768px) {
+  .aark-modal-body {
+    width: calc(100vw - 24px);
+    max-width: calc(100vw - 24px);
+    margin: 12px;
+  }
+}
+
+/* Small mobile devices (up to 480px) */
+@media (max-width: 480px) {
+  .aark-modal-body {
+    width: calc(100vw - 16px);
+    max-width: calc(100vw - 16px);
+    margin: 8px;
+    max-height: calc(100vh - 40px);
+  }
+}
+
+/* Tablet and larger devices (768px and up) */
+@media (min-width: 769px) {
+  .aark-modal-body {
+    max-width: 700px;
+  }
+}
+
+/* Desktop and larger devices (1024px and up) */
+@media (min-width: 1024px) {
+  .aark-modal-body {
+    max-width: 700px;
+  }
+}
+
+/* Large desktop devices (1440px and up) */
+@media (min-width: 1440px) {
+  .aark-modal-body {
+    max-width: 700px;
+  }
+}
+
+.aark-standard-modal .aark-modal-header {
+  margin-bottom: 1rem;
+}
+
+.aark-standard-modal .aark-modal-title {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #1f2937;
+}
+
+.aark-standard-modal .aark-modal-content {
+  flex: 1;
+  margin: 1rem 0;
+}
+
+.aark-standard-modal .aark-modal-icon {
+  text-align: center;
+  font-size: 3rem;
+  margin-bottom: 1rem;
+}
+
+.aark-standard-modal .aark-modal-content p {
+  margin: 0;
+  font-size: 1rem;
+  color: #6b7280;
+  line-height: 1.5;
+  text-align: center;
+}
+
+.aark-standard-modal .aark-modal-actions {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: flex-end;
+  margin-top: 1.5rem;
+}
+
+.aark-standard-modal .aark-modal-cancel-button,
+.aark-standard-modal .aark-modal-confirm-button {
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.875rem;
+  font-weight: 500;
+  transition: all 0.2s;
+  border: none;
+}
+
+.aark-standard-modal .aark-modal-cancel-button {
+  border: 1px solid #d1d5db;
+  background: #ffffff;
+  color: #374151;
+}
+
+.aark-standard-modal .aark-modal-cancel-button:hover {
+  background: #f9fafb;
+  border-color: #9ca3af;
+}
+
+.aark-standard-modal .aark-modal-confirm-button {
+  color: #ffffff;
+}
+
+.aark-standard-modal .aark-modal-confirm-button:hover {
+  opacity: 0.9;
 }
 
 @keyframes fade-in {
@@ -117,31 +282,31 @@
 @keyframes scale-in {
   0% {
     opacity: 0;
-    transform: translate(-50%, -50%) scale(0.9);
+    transform: scale(0.9);
   }
   to {
     opacity: 1;
-    transform: translate(-50%, -50%) scale(1);
+    transform: scale(1);
   }
 }
 @keyframes slide-down {
   0% {
     opacity: 0;
-    transform: translateX(-50%) translateY(-20px);
+    transform: translateY(-20px);
   }
   to {
     opacity: 1;
-    transform: translateX(-50%) translateY(0);
+    transform: translateY(0);
   }
 }
 @keyframes slide-up {
   0% {
     opacity: 0;
-    transform: translateX(-50%) translateY(20px);
+    transform: translateY(20px);
   }
   to {
     opacity: 1;
-    transform: translateX(-50%) translateY(0);
+    transform: translateY(0);
   }
 }
 @keyframes slide-left {
@@ -170,38 +335,6 @@
     max-width: calc(100vw - 20px);
     min-width: auto;
   }
-  .aark-modal-content.center {
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-  }
-  .aark-modal-content.top-center,
-  .aark-modal-content.bottom-center {
-    left: 50%;
-    transform: translateX(-50%);
-  }
-  .aark-modal-content.top-right {
-    right: 10px;
-    left: auto;
-    transform: none;
-  }
-  .aark-modal-content.top-left {
-    left: 10px;
-    right: auto;
-    transform: none;
-  }
-  .aark-modal-content.bottom-right {
-    right: 10px;
-    bottom: 10px;
-    left: auto;
-    transform: none;
-  }
-  .aark-modal-content.bottom-left {
-    left: 10px;
-    bottom: 10px;
-    right: auto;
-    transform: none;
-  }
   .aark-modal-content.notification {
     width: auto;
     max-width: calc(100vw - 20px);
@@ -213,11 +346,6 @@
   .aark-modal-content {
     max-width: calc(100vw - 10px);
     margin: 5px;
-  }
-  .aark-modal-content.center {
-    top: 10px;
-    left: 50%;
-    transform: translateX(-50%);
     max-height: calc(100vh - 20px);
   }
 }
