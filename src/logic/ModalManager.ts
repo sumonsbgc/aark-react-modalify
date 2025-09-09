@@ -2,6 +2,7 @@ import { createElement } from "react";
 import { createRoot, type Root } from "react-dom/client";
 import type { ReactNode } from "react";
 import ModalProvider from "../components/ModalProvider";
+import { getModalRoot, cleanupModalRoot } from "../utils/modal-root";
 import type {
 	ModalConfig,
 	NotificationConfig,
@@ -18,20 +19,15 @@ type ModalListener = (event: ModalEvent) => void;
 
 const listeners = new Set<ModalListener>();
 let currentConfig: ComponentConfig | null = null;
-let container: HTMLDivElement | null = null;
 let root: Root | null = null;
 
 function init(): void {
-	if (container) return;
-	container = document.createElement("div");
-	container.id = "aark-react-modalify-root";
-	container.style.position = "relative";
-	container.style.zIndex = "9999";
-	document.body.appendChild(container);
-	if (container) {
-		root = createRoot(container);
-		root.render(createElement(ModalProvider));
-	}
+	if (root) return;
+
+	// Use the centralized modal root
+	const container = getModalRoot();
+	root = createRoot(container);
+	root.render(createElement(ModalProvider));
 }
 
 function subscribe(listener: ModalListener): () => void {
@@ -159,11 +155,12 @@ function closeAll(): void {
 }
 
 function cleanup(): void {
-	if (container && container.parentNode) {
-		container.parentNode.removeChild(container);
-		container = null;
+	if (root) {
+		root.unmount();
 		root = null;
 	}
+	// Use centralized cleanup
+	cleanupModalRoot();
 }
 
 export const modalManager = {

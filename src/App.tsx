@@ -58,6 +58,9 @@ const SuccessNotification: FC = () => (
       display: "flex",
       alignItems: "center",
       gap: "12px",
+      backgroundColor: '#fff',
+      padding: "12px 16px",
+      borderRadius: "8px",
     }}
   >
     <div style={{ fontSize: "24px", color: "#28a745" }}>✅</div>
@@ -120,12 +123,16 @@ function App() {
       cancelText: "Cancel",
       onConfirm: () => {
         console.log("User confirmed!");
-        aark.notification({
-          title: "Action Completed",
-          text: "Your action was completed successfully!",
-          type: "success",
-          timer: 3000,
-        });
+        // Close the modal first, then show notification after a brief delay
+        aark.close();
+        setTimeout(() => {
+          aark.notification({
+            title: "Action Completed",
+            text: "Your action was completed successfully!",
+            type: "success",
+            timer: 3000,
+          });
+        }, 100);
       },
       onCancel: () => console.log("User cancelled!"),
     });
@@ -159,12 +166,16 @@ function App() {
       confirmText: "Yes, delete it!",
       cancelText: "Cancel",
       onConfirm: () => {
-        aark.notification({
-          title: "Deleted!",
-          text: "The item has been deleted successfully.",
-          type: "success",
-          timer: 2000,
-        });
+        // Close the modal first, then show notification after a brief delay
+        aark.close();
+        setTimeout(() => {
+          aark.notification({
+            title: "Deleted!",
+            text: "The item has been deleted successfully.",
+            type: "success",
+            timer: 2000,
+          });
+        }, 100);
       },
     });
   };
@@ -198,11 +209,11 @@ function App() {
     <div
       style={{
         minHeight: "100vh",
-        backgroundColor: "#f8f9fa",
+        backgroundColor: "#fff",
         padding: "32px",
       }}
     >
-      <div style={{ maxWidth: "1200px", margin: "0 auto" }}>
+      <div style={{ maxWidth: "1200px", margin: "0 auto", width: '100%' }}>
         <header style={{ textAlign: "center", marginBottom: "48px" }}>
           <h1
             style={{

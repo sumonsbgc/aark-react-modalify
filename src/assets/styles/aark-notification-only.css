@@ -1,0 +1,383 @@
+/* AARK React Modalify - Notification Styles Only */
+:root {
+  --aark-notification-bg: #fff;
+  --aark-notification-radius: 8px;
+  --aark-notification-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  --aark-notification-pad: 16px;
+  --aark-notification-z: 10000;
+  --aark-close-color: #666;
+  --aark-close-hover: #f5f5f5;
+  --aark-anim: 0.2s;
+}
+
+/* Notification container styling */
+.aark-notification-container {
+  pointer-events: auto;
+  width: auto;
+  max-width: 400px;
+  min-width: 280px;
+  position: relative;
+  z-index: 10001;
+}
+
+/* Notification wrapper for props-based notifications */
+.aark-notification-wrapper {
+  position: relative;
+  z-index: 10001;
+  pointer-events: auto;
+}
+
+/* Notification position animations */
+.aark-notification-container.center {
+  animation: scale-in var(--aark-anim);
+}
+.aark-notification-container.top-center {
+  animation: slide-down var(--aark-anim);
+}
+.aark-notification-container.top-right {
+  animation: slide-left var(--aark-anim);
+}
+.aark-notification-container.top-left {
+  animation: slide-right var(--aark-anim);
+}
+.aark-notification-container.bottom-right {
+  animation: slide-left var(--aark-anim);
+}
+.aark-notification-container.bottom-left {
+  animation: slide-right var(--aark-anim);
+}
+.aark-notification-container.bottom-center {
+  animation: slide-up var(--aark-anim);
+}
+
+/* Standard Notification Component */
+.aark-standard-notification {
+  background: var(--aark-notification-bg);
+  border-radius: var(--aark-notification-radius);
+  box-shadow: var(--aark-notification-shadow);
+  padding: var(--aark-notification-pad);
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+  transition: all var(--aark-anim);
+  border: 1px solid #e5e7eb;
+  max-width: 400px;
+  min-width: 280px;
+  z-index: 10001;
+  pointer-events: auto;
+}
+
+.aark-standard-notification:hover {
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+  transform: translateY(-1px);
+}
+
+/* Notification header */
+.aark-notification-header {
+  margin-bottom: 0.5rem;
+  position: relative;
+  z-index: 10001;
+  pointer-events: auto;
+}
+
+.aark-notification-title {
+  margin: 0;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #1f2937;
+  line-height: 1.25;
+}
+
+/* Notification content */
+.aark-notification-content {
+  color: #6b7280;
+  font-size: 0.75rem;
+  line-height: 1.4;
+  background-color: var(--aark-notification-bg);
+  position: relative;
+  z-index: 10001;
+  pointer-events: auto;
+}
+
+/* Notification body for component-based notifications */
+.aark-notification-body {
+  background: var(--aark-notification-bg);
+  border-radius: var(--aark-notification-radius);
+  box-shadow: var(--aark-notification-shadow);
+  padding: var(--aark-notification-pad);
+  position: relative;
+  z-index: 10001;
+  pointer-events: auto;
+}
+
+.aark-notification-content p {
+  margin: 0;
+}
+
+/* Notification icon */
+.aark-notification-icon {
+  font-size: 1.25rem;
+  flex-shrink: 0;
+  margin-top: 0.125rem;
+  position: relative;
+  z-index: 10001;
+  pointer-events: auto;
+}
+
+/* Notification close button */
+.aark-notification-close {
+  background: none;
+  border: none;
+  font-size: 1rem;
+  color: #9ca3af;
+  cursor: pointer;
+  padding: 0;
+  line-height: 1;
+  flex-shrink: 0;
+  transition: color var(--aark-anim);
+  position: relative;
+  z-index: 10002;
+  pointer-events: auto;
+}
+
+.aark-notification-close:hover {
+  color: #6b7280;
+}
+
+.aark-notification-close:focus {
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+/* Notification action buttons */
+.aark-notification-footer {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: flex-end;
+  margin-top: 1rem;
+  position: relative;
+  z-index: 10001;
+  pointer-events: auto;
+}
+
+.aark-notification-cancel-button,
+.aark-notification-confirm-button {
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.875rem;
+  font-weight: 500;
+  transition: all 0.2s;
+  border: none;
+  position: relative;
+  z-index: 10001;
+  pointer-events: auto;
+}
+
+.aark-notification-cancel-button {
+  border: 1px solid #d1d5db;
+  background: #ffffff;
+  color: #374151;
+}
+
+.aark-notification-cancel-button:hover {
+  background: #f9fafb;
+  border-color: #9ca3af;
+}
+
+.aark-notification-confirm-button {
+  color: #ffffff;
+}
+
+.aark-notification-confirm-button:hover {
+  opacity: 0.9;
+}
+
+/* Notification progress bar */
+.aark-notification-progress {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: 3px;
+  transform-origin: left;
+  border-radius: 0 0 var(--aark-notification-radius) var(--aark-notification-radius);
+}
+
+/* Type-based notification colors */
+.aark-notification-success {
+  border-left: 4px solid #4ade80;
+}
+
+.aark-notification-error {
+  border-left: 4px solid #ef4444;
+}
+
+.aark-notification-warning {
+  border-left: 4px solid #f59e0b;
+}
+
+.aark-notification-info {
+  border-left: 4px solid #3b82f6;
+}
+
+.aark-notification-question {
+  border-left: 4px solid #8b5cf6;
+}
+
+/* Notification animations */
+@keyframes aark-notification-progress {
+  from {
+    transform: scaleX(1);
+  }
+  to {
+    transform: scaleX(0);
+  }
+}
+
+@keyframes notification-fade-in {
+  0% {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes notification-fade-out {
+  0% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes notification-slide-in-right {
+  0% {
+    opacity: 0;
+    transform: translateX(100%);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes notification-slide-out-right {
+  0% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateX(100%);
+  }
+}
+
+@keyframes notification-slide-in-left {
+  0% {
+    opacity: 0;
+    transform: translateX(-100%);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes notification-slide-out-left {
+  0% {
+    opacity: 1;
+    transform: translateX(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateX(-100%);
+  }
+}
+
+/* Scale-in animation */
+@keyframes scale-in {
+  0% {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Slide animations */
+@keyframes slide-down {
+  0% {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slide-up {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slide-left {
+  0% {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slide-right {
+  0% {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Responsive behavior for notifications */
+@media (max-width: 768px) {
+  .aark-notification-container {
+    max-width: calc(100vw - 40px);
+    min-width: auto;
+  }
+
+  .aark-standard-notification {
+    max-width: calc(100vw - 40px);
+    min-width: auto;
+  }
+}
+
+@media (max-width: 480px) {
+  .aark-notification-container {
+    max-width: calc(100vw - 20px);
+  }
+
+  .aark-standard-notification {
+    max-width: calc(100vw - 20px);
+    min-width: auto;
+  }
+}

@@ -37,7 +37,7 @@ const StandardModal: FC<StandardModalProps> = ({ props, onClose }) => {
     showCancelButton = false,
     showConfirmButton = true,
     reverseButtons = false,
-    width = '600px',
+    width = 'auto',
     fullWidth = false,
     customClass = {}
   } = props;
@@ -69,11 +69,9 @@ const StandardModal: FC<StandardModalProps> = ({ props, onClose }) => {
     const baseStyle: React.CSSProperties = {};
 
     if (fullWidth) {
-      // Full width with small margins on all devices
       baseStyle.width = 'calc(100vw - 20px)';
       baseStyle.maxWidth = 'calc(100vw - 20px)';
     } else {
-      // Responsive width based on screen size
       if (typeof width === 'number') {
         baseStyle.width = `${width}px`;
       } else {
@@ -86,18 +84,18 @@ const StandardModal: FC<StandardModalProps> = ({ props, onClose }) => {
 
   return (
     <div className={`aark-standard-modal ${customClass.popup || ''}`} style={modalStyle}>
-      {title && (
-        <div className={`aark-modal-header ${customClass.header || ''}`}>
-          <h2 className={`aark-modal-title ${customClass.title || ''}`}>
-            {title}
-          </h2>
-        </div>
-      )}
-
       <div className={`aark-modal-content ${customClass.content || ''}`}>
         {iconElement && (
           <div className={`aark-modal-icon ${customClass.icon || ''}`}>
             {iconElement}
+          </div>
+        )}
+
+        {title && (
+          <div className={`aark-modal-header ${customClass.header || ''}`}>
+            <h2 className={`aark-modal-title ${customClass.title || ''}`}>
+              {title}
+            </h2>
           </div>
         )}
 
@@ -111,7 +109,7 @@ const StandardModal: FC<StandardModalProps> = ({ props, onClose }) => {
       </div>
 
       {(showCancelButton || showConfirmButton) && (
-        <div className={`aark-modal-actions ${customClass.actions || ''}`}>
+        <div className={`aark-modal-footer ${customClass.actions || ''}`}>
           {buttonOrder.map((buttonType) => {
             if (buttonType === 'cancel' && showCancelButton) {
               return (

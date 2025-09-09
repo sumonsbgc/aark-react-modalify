@@ -1,0 +1,314 @@
+/* AARK React Modalify - Modal Styles Only */
+:root {
+  --aark-modal-overlay-bg: rgba(0, 0, 0, 0.5);
+  --aark-modal-bg: #fff;
+  --aark-modal-radius: 8px;
+  --aark-modal-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+  --aark-modal-pad: 16px;
+  --aark-modal-z: 9999;
+  --aark-close-color: #666;
+  --aark-close-hover: #f5f5f5;
+  --aark-anim: 0.2s;
+}
+
+/* Modal overlay */
+.aark-modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  pointer-events: auto;
+}
+
+/* Modal container for component-based modals */
+.aark-modal-container {
+  width: 100%;
+  max-width: 700px;
+  min-width: 280px;
+  position: relative;
+  z-index: 2;
+  pointer-events: auto;
+}
+
+/* Modal wrapper for props-based modals - no styling, just container */
+.aark-modal-wrapper {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  z-index: 2;
+  pointer-events: auto;
+}
+
+/* Modal position animations */
+.aark-modal-container.center {
+  animation: scale-in var(--aark-anim);
+}
+.aark-modal-container.top-center {
+  animation: slide-down var(--aark-anim);
+}
+.aark-modal-container.top-right {
+  animation: slide-left var(--aark-anim);
+}
+.aark-modal-container.top-left {
+  animation: slide-right var(--aark-anim);
+}
+.aark-modal-container.bottom-right {
+  animation: slide-left var(--aark-anim);
+}
+.aark-modal-container.bottom-left {
+  animation: slide-right var(--aark-anim);
+}
+.aark-modal-container.bottom-center {
+  animation: slide-up var(--aark-anim);
+}
+
+/* Modal header */
+.aark-modal-header {
+  position: relative;
+  padding-bottom: 0;
+  margin-bottom: 0;
+}
+
+/* Modal close button */
+.aark-modal-close {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 30px;
+  height: 30px;
+  padding: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: 0;
+  border: 0;
+  color: var(--aark-close-color);
+  cursor: pointer;
+  border-radius: 50%;
+  font-size: 14px;
+  line-height: 1;
+  transition: all var(--aark-anim);
+  z-index: 10;
+}
+.aark-modal-close:hover {
+  background: var(--aark-close-hover);
+  color: #333;
+}
+.aark-modal-close:focus {
+  outline: 2px solid #007bff;
+  outline-offset: 2px;
+}
+
+/* Modal body for component-based modals */
+.aark-modal-body {
+  background: var(--aark-modal-bg);
+  border-radius: var(--aark-modal-radius);
+  box-shadow: var(--aark-modal-shadow);
+  padding: var(--aark-modal-pad);
+  max-height: 90vh;
+  overflow: auto;
+  margin: auto;
+  position: relative;
+  z-index: 2;
+  pointer-events: auto;
+}
+
+/* Modal content area */
+.aark-modal-content {
+  flex: 1;
+  margin: 1rem 0;
+}
+
+/* Modal footer/actions */
+.aark-modal-footer {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: flex-end;
+  margin-top: 1.5rem;
+}
+
+/* StandardModal - matches component-based modal behavior exactly */
+.aark-standard-modal {
+  background: var(--aark-modal-bg);
+  border-radius: var(--aark-modal-radius);
+  box-shadow: var(--aark-modal-shadow);
+  padding: var(--aark-modal-pad);
+  max-height: 90vh;
+  overflow: auto;
+  margin: auto;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  z-index: 2;
+  pointer-events: auto;
+
+  /* Exact same responsive behavior as component-based modal */
+  width: 100%;
+  max-width: 700px;
+  min-width: 280px;
+}
+
+/* Mobile devices (up to 768px) */
+@media (max-width: 768px) {
+  .aark-standard-modal {
+    width: calc(100vw - 24px);
+    max-width: calc(100vw - 24px);
+    margin: 12px;
+  }
+}
+
+/* Small mobile devices (up to 480px) */
+@media (max-width: 480px) {
+  .aark-standard-modal {
+    width: calc(100vw - 16px);
+    max-width: calc(100vw - 16px);
+    margin: 8px;
+    max-height: calc(100vh - 40px);
+  }
+}
+
+/* StandardModal internal components */
+.aark-standard-modal .aark-modal-header {
+  margin-bottom: 1rem;
+}
+
+.aark-standard-modal .aark-modal-title {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #1f2937;
+  text-align: center;
+}
+
+.aark-standard-modal .aark-modal-content {
+  flex: 1;
+  margin: 1rem 0;
+}
+
+.aark-standard-modal .aark-modal-icon {
+  text-align: center;
+  font-size: 3rem;
+  margin-bottom: 1rem;
+}
+
+.aark-standard-modal .aark-modal-content p {
+  margin: 0;
+  font-size: 1rem;
+  color: #6b7280;
+  line-height: 1.5;
+  text-align: center;
+}
+
+.aark-standard-modal .aark-modal-footer {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: flex-end;
+  margin-top: 1.5rem;
+}
+
+.aark-standard-modal .aark-modal-cancel-button,
+.aark-standard-modal .aark-modal-confirm-button {
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.875rem;
+  font-weight: 500;
+  transition: all 0.2s;
+  border: none;
+}
+
+.aark-standard-modal .aark-modal-cancel-button {
+  border: 1px solid #d1d5db;
+  background: #ffffff;
+  color: #374151;
+}
+
+.aark-standard-modal .aark-modal-cancel-button:hover {
+  background: #f9fafb;
+  border-color: #9ca3af;
+}
+
+.aark-standard-modal .aark-modal-confirm-button {
+  color: #ffffff;
+}
+
+.aark-standard-modal .aark-modal-confirm-button:hover {
+  opacity: 0.9;
+}
+
+/* Modal animations */
+@keyframes fade-in {
+  0% {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes scale-in {
+  0% {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+@keyframes slide-down {
+  0% {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@keyframes slide-up {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@keyframes slide-left {
+  0% {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+@keyframes slide-right {
+  0% {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Responsive behavior for component-based modals */
+@media (max-width: 768px) {
+  .aark-modal-container {
+    width: calc(100vw - 24px);
+    max-width: calc(100vw - 24px);
+    margin: 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .aark-modal-container {
+    width: calc(100vw - 16px);
+    max-width: calc(100vw - 16px);
+    margin: 8px;
+    max-height: calc(100vh - 40px);
+  }
+}

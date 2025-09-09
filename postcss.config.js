@@ -1,0 +1,42 @@
+module.exports = {
+	plugins: {
+		cssnano: {
+			preset: [
+				"default",
+				{
+					discardComments: {
+						removeAll: true,
+					},
+					reduceIdents: true,
+					mergeIdents: true,
+					autoprefixer: false,
+					normalizeWhitespace: true,
+					colormin: true,
+					convertValues: true,
+					discardDuplicates: true,
+					discardEmpty: true,
+					discardOverridden: true,
+					discardUnused: true,
+					mergeRules: true,
+					minifyFontValues: true,
+					minifyGradients: true,
+					minifyParams: true,
+					minifySelectors: true,
+					normalizeCharset: true,
+					normalizeDisplayValues: true,
+					normalizePositions: true,
+					normalizeRepeatStyle: true,
+					normalizeString: true,
+					normalizeTimingFunctions: true,
+					normalizeUnicode: true,
+					normalizeUrl: true,
+					orderedValues: true,
+					reduceInitial: true,
+					reduceTransforms: true,
+					svgo: true,
+					uniqueSelectors: true,
+				},
+			],
+		},
+	},
+};

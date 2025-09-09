@@ -6,18 +6,19 @@
 	"main": "dist/index.cjs.js",
 	"module": "dist/index.esm.js",
 	"types": "dist/index.d.ts",
-	"type": "module",
 	"exports": {
 		".": {
 			"types": "./dist/index.d.ts",
 			"import": "./dist/index.esm.js",
 			"require": "./dist/index.cjs.js"
 		},
-		"./styles": {
-			"types": "./dist/index-with-styles.d.ts",
-			"import": "./dist/index-with-styles.esm.js",
-			"require": "./dist/index-with-styles.cjs.js"
-		}
+		"./no-styles": {
+			"types": "./dist/index-no-styles.d.ts",
+			"import": "./dist/index-no-styles.esm.js",
+			"require": "./dist/index-no-styles.cjs.js"
+		},
+		"./dist/aark-react-modalify.css": "./dist/aark-react-modalify.css",
+		"./css": "./dist/aark-react-modalify.css"
 	},
 	"files": [
 		"dist",
@@ -25,8 +26,9 @@
 		"LICENSE"
 	],
 	"scripts": {
-		"build": "npm run clean && npm run build:lib && npm run build:types",
+		"build": "npm run clean && npm run build:lib && npm run build:no-styles && npm run build:types",
 		"build:lib": "vite build --config vite.lib.config.ts",
+		"build:no-styles": "vite build --config vite.lib-no-styles.config.ts",
 		"build:types": "tsc --project tsconfig.build.json --emitDeclarationOnly",
 		"clean": "rimraf dist",
 		"dev": "vite",

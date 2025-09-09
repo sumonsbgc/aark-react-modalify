@@ -5,6 +5,7 @@ import type { ModalConfig } from '../types';
 import '../assets/styles/aark-modal.css';
 import Icon from './Icon';
 import StandardModal from './modals/StandardModal';
+import { getModalRoot } from '../utils/modal-root';
 
 interface ModalProps {
   config: ModalConfig;
@@ -60,10 +61,10 @@ const Modal: FC<ModalProps> = ({ config, onClose }) => {
     [onClose]
   );
 
-  const contentClasses = `aark-modal-content ${position} ${className}`.trim();
+  const contentClasses = `aark-modal-container ${position} ${className}`.trim();
 
-  // Get the modal container or fallback to document.body
-  const modalContainer = document.getElementById('aark-react-modalify-root') || document.body;
+  // Get the single modal root container
+  const modalContainer = getModalRoot();
 
   // Render content based on whether it's props-based or component-based
   const renderContent = () => {
@@ -86,7 +87,9 @@ const Modal: FC<ModalProps> = ({ config, onClose }) => {
               <Icon name="close" size={12} />
             </button>
           )}
-          <StandardModal props={props} onClose={onClose} />
+          <div className="aark-modal-wrapper">
+            <StandardModal props={props} onClose={onClose} />
+          </div>
         </div>
       );
     } else if (content) {
@@ -99,16 +102,14 @@ const Modal: FC<ModalProps> = ({ config, onClose }) => {
           onClick={(e) => e.stopPropagation()}
         >
           {showCloseIcon && (
-            <header className="aark-modal-header">
-              <button
-                onClick={handleCloseClick}
-                className="aark-modal-close"
-                aria-label="Close Modal"
-                type="button"
-              >
-                <Icon name="close" size={12} />
-              </button>
-            </header>
+            <button
+              onClick={handleCloseClick}
+              className="aark-modal-close"
+              aria-label="Close Modal"
+              type="button"
+            >
+              <Icon name="close" size={12} />
+            </button>
           )}
           <div className="aark-modal-body">
             {content}
@@ -127,7 +128,7 @@ const Modal: FC<ModalProps> = ({ config, onClose }) => {
       style={{
         position: 'fixed',
         inset: 0,
-        zIndex: 'var(--aark-modal-z)',
+        zIndex: 9999,
         background: 'var(--aark-modal-overlay-bg)',
         backdropFilter: 'blur(2px)',
         animation: 'fade-in var(--aark-anim)',

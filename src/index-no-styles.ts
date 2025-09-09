@@ -1,7 +1,4 @@
-// Import CSS automatically when using the main library
-import "./assets/styles/aark-modal.css";
-
-// Main API
+// Main API without CSS (for users who want to import CSS separately)
 export { default as aark } from "./logic/aark";
 
 // Types

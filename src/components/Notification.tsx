@@ -4,6 +4,7 @@ import { createPortal } from 'react-dom';
 import type { NotificationConfig } from '../types';
 import '../assets/styles/aark-modal.css';
 import StandardNotification from './notifications/StandardNotification';
+import { getModalRoot } from '../utils/modal-root';
 
 interface NotificationProps {
   config: NotificationConfig;
@@ -56,17 +57,17 @@ const Notification: FC<NotificationProps> = ({ config, onClose }) => {
     [onClose]
   );
 
-  const contentClasses = `aark-modal-content notification ${position} ${className}`.trim();
+  const contentClasses = `aark-notification-container ${position} ${className}`.trim();
 
-  // Get the modal container or fallback to document.body
-  const modalContainer = document.getElementById('aark-react-modalify-root') || document.body;
+  // Get the single modal root container (shared with modals)
+  const modalContainer = getModalRoot();
 
   // Get position styles
   const getPositionStyles = () => {
     const baseStyles = {
       position: 'fixed' as const,
-      zIndex: 'var(--aark-modal-z)',
-      margin: '1rem'
+      zIndex: 10000,
+      margin: '1rem',
     };
 
     switch (position) {
@@ -91,7 +92,11 @@ const Notification: FC<NotificationProps> = ({ config, onClose }) => {
   const renderContent = () => {
     if (props) {
       // Props-based notification
-      return <StandardNotification props={props} onClose={onClose} />;
+      return (
+        <div className="aark-notification-wrapper">
+          <StandardNotification props={props} onClose={onClose} />
+        </div>
+      );
     } else if (content) {
       // Component-based notification (existing behavior)
       return (
@@ -104,14 +109,14 @@ const Notification: FC<NotificationProps> = ({ config, onClose }) => {
           {showCloseIcon && (
             <button
               onClick={handleCloseClick}
-              className="aark-modal-close"
+              className="aark-notification-close"
               aria-label="Close notification"
               type="button"
             >
               ×
             </button>
           )}
-          <div id="aark-notification-content" className="aark-modal-body">
+          <div id="aark-notification-body" className="aark-notification-body">
             {content}
           </div>
         </div>
