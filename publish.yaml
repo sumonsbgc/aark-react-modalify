@@ -1,0 +1,56 @@
+name: Publish NPM Package
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: "22"
+          registry-url: "https://registry.npmjs.org"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Get package version
+        id: version
+        run: |
+          CURRENT=$(node -p "require('./package.json').version")
+          LATEST=$(npm view aark-react-modalify version || echo "0.0.0")
+          echo "current=$CURRENT" >> $GITHUB_OUTPUT
+          echo "latest=$LATEST" >> $GITHUB_OUTPUT
+          echo "Current version: $CURRENT"
+          echo "Latest version: $LATEST"
+
+      - name: Skip if version already exists
+        if: steps.version.outputs.current == steps.version.outputs.latest
+        run: echo "Version already published. Skipping..."
+
+      - name: Build
+        if: steps.version.outputs.current != steps.version.outputs.latest
+        run: npm run build
+
+      - name: Publish
+        if: steps.version.outputs.current != steps.version.outputs.latest
+        run: npm publish --access public --no-git-checks
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Tag Release
+        if: steps.version.outputs.current != steps.version.outputs.latest
+        run: |
+          git config --local user.email "sumonsbgc@gmail.com"
+          git config --local user.name "Mohammad Sumon"
+          git tag v${{ steps.version.outputs.current }}
+          git push origin --tags
