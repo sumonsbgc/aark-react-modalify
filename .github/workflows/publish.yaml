@@ -45,7 +45,7 @@ jobs:
         if: steps.version.outputs.current != steps.version.outputs.latest
         run: npm publish --access public --no-git-checks
         env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          NODE_AUTH_TOKEN: ${{ secrets.AARK_REACT_MODAL }}
 
       - name: Tag Release
         if: steps.version.outputs.current != steps.version.outputs.latest
