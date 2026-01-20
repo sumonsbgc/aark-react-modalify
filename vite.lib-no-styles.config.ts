@@ -52,5 +52,6 @@ export default defineConfig({
 		sourcemap: false,
 		target: "es2020",
 		reportCompressedSize: false,
+		emptyOutDir: false,
 	},
 });
