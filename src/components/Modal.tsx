@@ -153,7 +153,6 @@ const Modal: FC<ModalProps> = ({ config, onClose }) => {
     <div
       className={`aark-modal-overlay ${overlayClassName}`.trim()}
       onClick={handleOverlayClick}
-      aria-hidden="true"
       style={{
         position: 'fixed',
         inset: 0,
@@ -165,12 +164,13 @@ const Modal: FC<ModalProps> = ({ config, onClose }) => {
         WebkitBackdropFilter: 'blur(var(--aark-modal-overlay-blur, 0px))',
         animation: 'fade-in var(--aark-anim)',
         display: 'flex',
+        // 'center' → center/center; 'top-*' → flex-start; 'bottom-*' → flex-end
         alignItems:
-          position.includes('center') ? 'center' :
-          position.includes('top') ? 'flex-start' : 'flex-end',
+          position === 'center' ? 'center' :
+          position.startsWith('top') ? 'flex-start' : 'flex-end',
         justifyContent:
-          position.includes('center') ? 'center' :
-          position.includes('right') ? 'flex-end' : 'flex-start',
+          position.endsWith('center') ? 'center' :
+          position.endsWith('right') ? 'flex-end' : 'flex-start',
         padding: '1rem',
         overflowY: 'auto',
         boxSizing: 'border-box',

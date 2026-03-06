@@ -120,7 +120,9 @@ const StandardNotification: FC<StandardNotificationProps> = ({ props, onClose })
             style={{ marginTop: title ? '0.25rem' : 0 }}
           >
             {html ? (
-              <div dangerouslySetInnerHTML={{ __html: typeof html === 'string' ? html : '' }} />
+              typeof html === 'string'
+                ? <div dangerouslySetInnerHTML={{ __html: html }} />
+                : <div>{html}</div>
             ) : text ? (
               <p>{text}</p>
             ) : null}

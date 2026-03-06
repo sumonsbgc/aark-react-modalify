@@ -345,17 +345,17 @@ import "aark-react-modalify/css";
 ### `useModal` hook
 
 ```tsx
-import { useModal } from "aark-react-modalify";
+import { aark, useModal } from "aark-react-modalify";
 
 function MyComponent() {
-  const { openModal, closeModal, isOpen } = useModal();
+  const { isOpen, config } = useModal();
 
   return (
     <div>
-      <button onClick={() => openModal(<div>Content</div>, { position: "center" })}>
+      <button onClick={() => aark.fire(<div>Content</div>, { position: "center" })}>
         Open
       </button>
-      {isOpen && <p>Modal is open</p>}
+      {isOpen && <p>Modal is open (mode: {config?.mode})</p>}
     </div>
   );
 }
