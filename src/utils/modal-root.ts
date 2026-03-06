@@ -18,6 +18,9 @@ export const getModalRoot = (): HTMLElement => {
 		if (!modalRoot) {
 			modalRoot = document.createElement("div");
 			modalRoot.id = "aark-react-modalify-root";
+			// No z-index here — setting z-index creates a new stacking context which would
+			// scope the overlay's z-index inside this container, making --aark-modal-z
+			// ineffective against page elements. The overlay itself sets its own z-index.
 			modalRoot.style.cssText = `
         position: fixed;
         top: 0;
@@ -25,7 +28,6 @@ export const getModalRoot = (): HTMLElement => {
         width: 100%;
         height: 100%;
         pointer-events: none;
-        z-index: 9998;
       `;
 			document.body.appendChild(modalRoot);
 		}

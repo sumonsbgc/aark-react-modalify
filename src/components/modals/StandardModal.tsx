@@ -100,7 +100,9 @@ const StandardModal: FC<StandardModalProps> = ({ props, onClose }) => {
         )}
 
         {html ? (
-          <div dangerouslySetInnerHTML={{ __html: typeof html === 'string' ? html : '' }} />
+          typeof html === 'string'
+            ? <div dangerouslySetInnerHTML={{ __html: html }} />
+            : <div>{html}</div>
         ) : text ? (
           <p>
             {text}
