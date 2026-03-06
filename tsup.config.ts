@@ -7,13 +7,14 @@ export default defineConfig([
 		entry: { index: "src/index.ts" },
 		format: ["esm", "cjs"],
 		dts: true,
+		tsconfig: "tsconfig.lib.json",
 		external: ["react", "react-dom"],
 		minify: true,
 		clean: true,
 		target: "es2020",
 		outDir: "dist",
 		// Keep the same filenames as the previous build
-		outExtension: ({ format }) => ({
+		outExtension: ({ format }: { format: string }) => ({
 			js: `.${format === "esm" ? "esm" : "cjs"}.js`,
 		}),
 		// tsup/esbuild bundles CSS @import chains into dist/index.css.
@@ -32,11 +33,12 @@ export default defineConfig([
 		entry: { "index-no-styles": "src/index-no-styles.ts" },
 		format: ["esm", "cjs"],
 		dts: true,
+		tsconfig: "tsconfig.lib.json",
 		external: ["react", "react-dom"],
 		minify: true,
 		target: "es2020",
 		outDir: "dist",
-		outExtension: ({ format }) => ({
+		outExtension: ({ format }: { format: string }) => ({
 			js: `.${format === "esm" ? "esm" : "cjs"}.js`,
 		}),
 	},
