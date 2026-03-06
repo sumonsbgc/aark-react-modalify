@@ -1,8 +1,9 @@
 {
 	"name": "aark-react-modalify",
-	"version": "1.2.2",
-	"description": "A lightweight, flexible React modal and notification library with TypeScript support. Features automatic DOM mounting, customizable styling, and a simple imperative API for displaying modals, alerts, confirmations, and toast notifications.",
+	"version": "1.3.0",
+	"description": "A lightweight, flexible React modal and notification library with TypeScript support. Features automatic DOM mounting, customizable styling via CSS variables, responsive size presets, and a simple imperative API.",
 	"private": false,
+	"packageManager": "pnpm@10.11.0",
 	"main": "dist/index.cjs.js",
 	"module": "dist/index.esm.js",
 	"types": "dist/index.d.ts",
@@ -26,17 +27,12 @@
 		"LICENSE"
 	],
 	"scripts": {
-		"build": "npm run clean && npm run build:lib && npm run build:no-styles && npm run build:types",
-		"build:lib": "vite build --config vite.lib.config.ts",
-		"build:no-styles": "vite build --config vite.lib-no-styles.config.ts",
-		"build:types": "tsc --project tsconfig.build.json --emitDeclarationOnly",
-		"clean": "rimraf dist",
-		"dev": "vite",
-		"prepare": "npm run build",
+		"build": "tsup",
+		"dev": "bunx vite",
+		"typecheck": "tsc --noEmit",
 		"lint": "eslint src --ext .ts,.tsx",
 		"lint:fix": "eslint src --ext .ts,.tsx --fix",
-		"typecheck": "tsc --noEmit",
-		"analyze": "npm run build && npx bundlesize"
+		"clean": "rimraf dist"
 	},
 	"keywords": [
 		"react",
@@ -67,7 +63,6 @@
 		"@types/react": "^19.2.6",
 		"@types/react-dom": "^19.2.3",
 		"@vitejs/plugin-react": "^5.1.1",
-		"cssnano": "^7.1.2",
 		"eslint": "^9.39.1",
 		"eslint-plugin-react-hooks": "^7.0.1",
 		"eslint-plugin-react-refresh": "^0.4.24",
@@ -75,7 +70,7 @@
 		"react": "^19.2.0",
 		"react-dom": "^19.2.0",
 		"rimraf": "^6.1.0",
-		"terser": "^5.44.1",
+		"tsup": "^8.5.0",
 		"typescript": "~5.9.3",
 		"typescript-eslint": "^8.47.0",
 		"vite": "^7.2.2"

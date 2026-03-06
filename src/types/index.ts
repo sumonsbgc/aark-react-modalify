@@ -19,6 +19,9 @@ export type ModalMode = "modal" | "notification";
 
 export type ModalType = "success" | "error" | "warning" | "info" | "question";
 
+/** Convenience size presets — maps to max-width values */
+export type ModalSize = "sm" | "md" | "lg" | "xl" | "full";
+
 // Props-based modal configuration
 export interface ModalProps {
 	title?: string;
@@ -94,6 +97,12 @@ export interface ModalOptions extends BaseOptions {
 	position?: ModalPosition;
 	overlayClassName?: string;
 	preventOverlayClose?: boolean;
+	/** Convenience size preset. Overridden by explicit width/maxWidth. */
+	size?: ModalSize;
+	/** Explicit width (e.g. '500px', '80%', 600). Overrides size preset. */
+	width?: string | number;
+	/** Explicit max-width (e.g. '600px', '90vw'). Overrides size preset. */
+	maxWidth?: string | number;
 }
 
 export interface NotificationOptions extends BaseOptions {

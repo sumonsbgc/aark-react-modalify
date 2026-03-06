@@ -1,16 +1,26 @@
 import type { FC, MouseEvent } from 'react';
-import { useEffect, useCallback } from 'react';
+import { useEffect, useCallback, useMemo } from 'react';
 import { createPortal } from 'react-dom';
-import type { ModalConfig } from '../types';
-import '../assets/styles/aark-modal.css';
+import type { ModalConfig, ModalSize } from '../types';
 import Icon from './Icon';
 import StandardModal from './modals/StandardModal';
 import { getModalRoot } from '../utils/modal-root';
+
+// Note: CSS is NOT imported here. It is imported from src/index.ts so that the
+// no-styles entry (index-no-styles.ts) produces a JS-only bundle.
 
 interface ModalProps {
   config: ModalConfig;
   onClose: () => void;
 }
+
+const sizeMaxWidths: Record<ModalSize, string> = {
+  sm:   '400px',
+  md:   '550px',
+  lg:   '700px',
+  xl:   '900px',
+  full: 'calc(100vw - 32px)',
+};
 
 const Modal: FC<ModalProps> = ({ config, onClose }) => {
   const { content, props, options = {} } = config;
@@ -21,28 +31,22 @@ const Modal: FC<ModalProps> = ({ config, onClose }) => {
     overlayClassName = '',
     preventEscClose = false,
     preventOverlayClose = false,
+    width,
+    maxWidth,
+    size,
   } = options;
 
-  // CSS is now imported at the top of the file
-  // useEffect(() => {
-  //   injectStyles(MODAL_CSS, 'aark-modal-styles');
-  // }, []);
-
-  // Handle keyboard events
+  // Keyboard ESC handling
   useEffect(() => {
+    if (preventEscClose) return;
     const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === 'Escape' && !preventEscClose) {
-        onClose();
-      }
+      if (event.key === 'Escape') onClose();
     };
-
-    if (!preventEscClose) {
-      document.addEventListener('keydown', handleKeyDown);
-      return () => document.removeEventListener('keydown', handleKeyDown);
-    }
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
   }, [onClose, preventEscClose]);
 
-  // Handle overlay click
+  // Overlay click
   const handleOverlayClick = useCallback(
     (event: MouseEvent) => {
       if (event.target === event.currentTarget && !preventOverlayClose) {
@@ -52,7 +56,7 @@ const Modal: FC<ModalProps> = ({ config, onClose }) => {
     [onClose, preventOverlayClose]
   );
 
-  // Handle close button click
+  // Close button click
   const handleCloseClick = useCallback(
     (event: MouseEvent) => {
       event.stopPropagation();
@@ -61,18 +65,39 @@ const Modal: FC<ModalProps> = ({ config, onClose }) => {
     [onClose]
   );
 
-  const contentClasses = `aark-modal-container ${position} ${className}`.trim();
+  // Resolve container size: explicit width/maxWidth > size preset > CSS default
+  const containerSizeStyle = useMemo(() => {
+    const style: React.CSSProperties = {};
 
-  // Get the single modal root container
+    if (width !== undefined) {
+      style.width = typeof width === 'number' ? `${width}px` : width;
+      if (maxWidth === undefined) style.maxWidth = style.width;
+    }
+
+    if (maxWidth !== undefined) {
+      style.maxWidth = typeof maxWidth === 'number' ? `${maxWidth}px` : maxWidth;
+    } else if (size) {
+      const preset = sizeMaxWidths[size];
+      if (size === 'full') {
+        style.width = style.width ?? preset;
+        style.maxWidth = preset;
+      } else {
+        style.maxWidth = preset;
+      }
+    }
+
+    return style;
+  }, [width, maxWidth, size]);
+
+  const contentClasses = `aark-modal-container ${position} ${className}`.trim();
   const modalContainer = getModalRoot();
 
-  // Render content based on whether it's props-based or component-based
   const renderContent = () => {
     if (props) {
-      // Props-based modal - direct StandardModal
       return (
         <div
           className={contentClasses}
+          style={containerSizeStyle}
           role="dialog"
           aria-modal="true"
           onClick={(e) => e.stopPropagation()}
@@ -92,31 +117,35 @@ const Modal: FC<ModalProps> = ({ config, onClose }) => {
           </div>
         </div>
       );
-    } else if (content) {
-      // Component-based modal
+    }
+
+    if (content) {
+      // Component-based modal — close button is inside the body card
       return (
         <div
           className={contentClasses}
+          style={containerSizeStyle}
           role="dialog"
           aria-modal="true"
           onClick={(e) => e.stopPropagation()}
         >
-          {showCloseIcon && (
-            <button
-              onClick={handleCloseClick}
-              className="aark-modal-close"
-              aria-label="Close Modal"
-              type="button"
-            >
-              <Icon name="close" size={12} />
-            </button>
-          )}
           <div className="aark-modal-body">
+            {showCloseIcon && (
+              <button
+                onClick={handleCloseClick}
+                className="aark-modal-close"
+                aria-label="Close Modal"
+                type="button"
+              >
+                <Icon name="close" size={12} />
+              </button>
+            )}
             {content}
           </div>
         </div>
       );
     }
+
     return null;
   };
 
@@ -128,14 +157,23 @@ const Modal: FC<ModalProps> = ({ config, onClose }) => {
       style={{
         position: 'fixed',
         inset: 0,
-        zIndex: 9999,
+        // Use CSS variable so setAarkModalTheme({ modalZIndex }) works
+        zIndex: 'var(--aark-modal-z, 9999)' as unknown as number,
         background: 'var(--aark-modal-overlay-bg)',
-        backdropFilter: 'blur(2px)',
+        // Use CSS variable — set overlayBlur to e.g. '2px' via setAarkModalTheme
+        backdropFilter: 'blur(var(--aark-modal-overlay-blur, 0px))',
+        WebkitBackdropFilter: 'blur(var(--aark-modal-overlay-blur, 0px))',
         animation: 'fade-in var(--aark-anim)',
         display: 'flex',
-        alignItems: position.includes('center') ? 'center' : position.includes('top') ? 'flex-start' : 'flex-end',
-        justifyContent: position.includes('center') ? 'center' : position.includes('right') ? 'flex-end' : 'flex-start',
-        padding: '1rem'
+        alignItems:
+          position.includes('center') ? 'center' :
+          position.includes('top') ? 'flex-start' : 'flex-end',
+        justifyContent:
+          position.includes('center') ? 'center' :
+          position.includes('right') ? 'flex-end' : 'flex-start',
+        padding: '1rem',
+        overflowY: 'auto',
+        boxSizing: 'border-box',
       }}
     >
       {renderContent()}
