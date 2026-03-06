@@ -1,330 +1,451 @@
-# AARK React Modalify 🚀
+# AARK React Modalify
 
-A lightweight, flexible React modal and notification library with TypeScript support. Features automatic DOM mounting, customizable styling, and a simple imperative API for displaying modals, alerts, confirmations, and toast notifications.
+A lightweight, flexible React modal and notification library with TypeScript support. Features automatic DOM mounting, customizable styling via CSS variables, responsive size presets, and a simple imperative API.
 
-## ✨ Features
+[![npm version](https://img.shields.io/npm/v/aark-react-modalify)](https://www.npmjs.com/package/aark-react-modalify)
+[![license](https://img.shields.io/npm/l/aark-react-modalify)](LICENSE)
 
-- **Zero Dependencies**: Pure React implementation
-- **TypeScript Support**: Full type safety out of the box
-- **Dual API**: Component-based OR props-based configuration
-- **Automatic CSS**: Styles included automatically or import separately
-- **Portal Rendering**: Modals render outside your component tree
-- **Accessibility**: Built-in keyboard navigation and focus management
-- **Customizable**: CSS variables for complete theme control
-- **Multiple Positions**: Various positioning options for modals and notifications
-- **Animation Support**: Smooth fade and slide animations
-- **Hook Integration**: useModal hook for advanced use cases
+## Features
 
-## 📦 Installation
+- **Zero runtime dependencies** — pure React + ReactDOM
+- **TypeScript** — full type safety out of the box
+- **Dual API** — pass raw JSX _or_ a plain props object
+- **Size presets** — `sm / md / lg / xl / full` with explicit `width` / `maxWidth` override
+- **Responsive** — adapts automatically on tablet and mobile
+- **CSS variables** — theme every visual property without touching JS
+- **Imperative** — call `aark.fire()` / `aark.notification()` anywhere, no context required
+- **Portal rendering** — modal root managed automatically, no wrapping provider needed
+- **Accessibility** — ESC key, overlay click, and focus management built in
+
+---
+
+## Installation
 
 ```bash
+# npm
 npm install aark-react-modalify
+
+# pnpm
+pnpm add aark-react-modalify
+
+# yarn
+yarn add aark-react-modalify
 ```
 
-## 🚀 Quick Start
+**Peer dependencies:** `react >= 16.8.0`, `react-dom >= 16.8.0`
 
-### Component-Based Approach
+---
 
-```jsx
+## Quick Start
+
+### Component-based (pass any JSX)
+
+```tsx
 import { aark } from "aark-react-modalify";
 
 function App() {
-	const openModal = () => {
-		aark.fire(
-			<div>
-				<h2>Hello World!</h2>
-				<p>This is a simple modal.</p>
-				<button onClick={() => aark.close()}>Close</button>
-			</div>,
-			{
-				position: "center",
-				showCloseIcon: true,
-			}
-		);
-	};
+  const openModal = () => {
+    aark.fire(
+      <div>
+        <h2>Hello World!</h2>
+        <p>This is a simple modal.</p>
+        <button onClick={() => aark.close()}>Close</button>
+      </div>,
+      { position: "center", showCloseIcon: true }
+    );
+  };
 
-	return <button onClick={openModal}>Open Modal</button>;
+  return <button onClick={openModal}>Open Modal</button>;
 }
 ```
 
-### Props-Based Approach
+### Props-based (built-in styled templates)
 
-```jsx
+```tsx
 import { aark } from "aark-react-modalify";
 
-function App() {
-	const showConfirmation = () => {
-		aark.fire({
-			title: "Delete Item",
-			text: "Are you sure you want to delete this item?",
-			type: "warning",
-			showCancelButton: true,
-			confirmText: "Yes, delete it!",
-			cancelText: "Cancel",
-			onConfirm: () => {
-				aark.notification({
-					title: "Deleted!",
-					text: "The item has been deleted successfully.",
-					type: "success",
-					timer: 3000,
-				});
-			},
-		});
-	};
-
-	return <button onClick={showConfirmation}>Delete Item</button>;
-}
-```
-
-## 📚 API Reference
-
-### Modal Methods
-
-#### `aark.fire(content, options?)` or `aark.fire(props)`
-
-**Component-based:**
-
-```jsx
-aark.fire(<YourComponent />, options);
-```
-
-**Props-based:**
-
-```jsx
 aark.fire({
-	title: "Modal Title",
-	text: "Modal content",
-	type: "info", // "success" | "error" | "warning" | "info" | "question"
-	showCancelButton: true,
-	confirmText: "OK",
-	cancelText: "Cancel",
-	onConfirm: () => {},
-	onCancel: () => {},
+  title: "Delete Item",
+  text: "Are you sure you want to delete this item?",
+  type: "warning",
+  showCancelButton: true,
+  confirmText: "Yes, delete it!",
+  cancelText: "Cancel",
+  onConfirm: () => {
+    aark.notification({
+      title: "Deleted!",
+      text: "The item has been deleted successfully.",
+      type: "success",
+      timer: 3000,
+    });
+  },
 });
 ```
 
-### Notification Methods
+---
 
-#### `aark.notification(content, options?)` or `aark.notification(props)`
+## API Reference
 
-**Component-based:**
+### `aark.fire(content, options?)` — component-based modal
 
-```jsx
-aark.notification(<YourNotification />, options);
+```tsx
+aark.fire(<YourComponent />, options?: ModalOptions);
 ```
 
-**Props-based:**
+### `aark.fire(props)` — props-based modal
 
-```jsx
+```tsx
+aark.fire({
+  title?: string;
+  text?: string;
+  type?: "success" | "error" | "warning" | "info" | "question";
+  icon?: string | ReactNode;
+  html?: string | ReactNode;
+  confirmText?: string;
+  cancelText?: string;
+  showCancelButton?: boolean;
+  showConfirmButton?: boolean;
+  reverseButtons?: boolean;
+  onConfirm?: () => void;
+  onCancel?: () => void;
+  allowOutsideClick?: boolean;
+  allowEscapeKey?: boolean;
+  width?: string | number;       // e.g. "500px", "80%", 600
+  fullWidth?: boolean;
+  padding?: string | number;
+  background?: string;
+  customClass?: {
+    popup?: string;
+    title?: string;
+    icon?: string;
+    content?: string;
+    confirmButton?: string;
+    cancelButton?: string;
+    footer?: string;
+  };
+});
+```
+
+### `aark.notification(content, options?)` — component-based notification
+
+```tsx
+aark.notification(<YourToast />, options?: NotificationOptions);
+```
+
+### `aark.notification(props)` — props-based notification
+
+```tsx
 aark.notification({
-	title: "Notification Title",
-	text: "Notification message",
-	type: "success",
-	timer: 3000,
-	position: "top-right",
+  title?: string;
+  text?: string;
+  type?: "success" | "error" | "warning" | "info" | "question";
+  icon?: string | ReactNode;
+  html?: string | ReactNode;
+  timer?: number;                // auto-close in ms (default: 5000)
+  showCloseButton?: boolean;
+  clickToClose?: boolean;
+  width?: string | number;
+  fullWidth?: boolean;
+  padding?: string | number;
+  background?: string;
+  customClass?: {
+    popup?: string;
+    title?: string;
+    content?: string;
+  };
 });
 ```
 
-### Other Methods
+### Other methods
 
-```jsx
-aark.close(); // Close current modal
-aark.closeAll(); // Close all modals and notifications
-aark.isOpen(); // Check if any modal is open
+```tsx
+aark.close();       // close the current modal / notification
+aark.closeAll();    // close everything
+aark.isOpen();      // returns boolean
 ```
 
-## ⚙️ Configuration Options
+---
 
-### Modal Options
+## Configuration Options
 
-| Option                | Type            | Default    | Description              |
-| --------------------- | --------------- | ---------- | ------------------------ |
-| `position`            | `ModalPosition` | `"center"` | Modal position           |
-| `showCloseIcon`       | `boolean`       | `false`    | Show close button        |
-| `clickOutsideToClose` | `boolean`       | `true`     | Close on backdrop click  |
-| `escapeKeyToClose`    | `boolean`       | `true`     | Close on ESC key         |
-| `onOpen`              | `() => void`    | -          | Called when modal opens  |
-| `onClose`             | `() => void`    | -          | Called when modal closes |
+### `ModalOptions`
 
-### Notification Options
+| Option                | Type            | Default    | Description                              |
+| --------------------- | --------------- | ---------- | ---------------------------------------- |
+| `position`            | `ModalPosition` | `"center"` | Where the modal appears                  |
+| `size`                | `ModalSize`     | —          | Preset max-width (`sm/md/lg/xl/full`)    |
+| `width`               | `string\|number`| —          | Explicit width, overrides `size`         |
+| `maxWidth`            | `string\|number`| —          | Explicit max-width, overrides `size`     |
+| `showCloseIcon`       | `boolean`       | `false`    | Render the × close button                |
+| `className`           | `string`        | —          | Extra class on the modal container       |
+| `overlayClassName`    | `string`        | —          | Extra class on the backdrop              |
+| `preventOverlayClose` | `boolean`       | `false`    | Disable close on backdrop click          |
+| `preventEscClose`     | `boolean`       | `false`    | Disable close on ESC key                 |
 
-| Option            | Type                   | Default       | Description           |
-| ----------------- | ---------------------- | ------------- | --------------------- |
-| `title`           | `string`               | -             | Notification title    |
-| `text`            | `string`               | -             | Notification content  |
-| `type`            | `NotificationType`     | `"info"`      | Notification type     |
-| `timer`           | `number`               | `0`           | Auto-close timer (ms) |
-| `position`        | `NotificationPosition` | `"top-right"` | Notification position |
-| `showCloseButton` | `boolean`              | `true`        | Show close button     |
+### `NotificationOptions`
 
-### Position Types
+| Option           | Type                   | Default       | Description                          |
+| ---------------- | ---------------------- | ------------- | ------------------------------------ |
+| `position`       | `NotificationPosition` | `"top-right"` | Where the notification appears       |
+| `autoCloseTime`  | `number`               | `5000`        | Auto-dismiss delay in ms             |
+| `showCloseIcon`  | `boolean`              | `true`        | Render the × close button            |
+| `className`      | `string`               | —             | Extra class on the notification      |
+| `preventEscClose`| `boolean`              | `false`       | Disable dismiss on ESC key           |
 
-```typescript
+### Size presets (`ModalSize`)
+
+| Value  | Max-width         |
+| ------ | ----------------- |
+| `sm`   | 400 px            |
+| `md`   | 550 px            |
+| `lg`   | 700 px (default)  |
+| `xl`   | 900 px            |
+| `full` | 100 vw − 32 px    |
+
+```tsx
+// Use a preset
+aark.fire(<Content />, { size: "xl" });
+
+// Or set an exact width
+aark.fire(<Content />, { width: "80%", maxWidth: "900px" });
+```
+
+### Position types
+
+```ts
 type ModalPosition =
-	| "center"
-	| "top-center"
-	| "top-left"
-	| "top-right"
-	| "bottom-center"
-	| "bottom-left"
-	| "bottom-right";
+  | "center"
+  | "top-center"
+  | "top-right"
+  | "bottom-center"
+  | "bottom-right";
 
 type NotificationPosition =
-	| "top-left"
-	| "top-center"
-	| "top-right"
-	| "bottom-left"
-	| "bottom-center"
-	| "bottom-right";
+  | "top-left"
+  | "top-center"
+  | "top-right"
+  | "bottom-left"
+  | "bottom-center"
+  | "bottom-right";
 ```
 
-## 🎨 Customization
+---
 
-### CSS Variables
+## Customization
+
+### CSS variables (full list)
 
 ```css
 :root {
-	--aark-modal-overlay-bg: rgba(0, 0, 0, 0.5);
-	--aark-modal-bg: #fff;
-	--aark-modal-radius: 8px;
-	--aark-modal-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
-	--aark-modal-pad: 16px;
-	--aark-modal-z: 9999;
-	--aark-notification-bg: #fff;
-	--aark-notification-radius: 8px;
-	--aark-notification-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-	--aark-notification-pad: 16px;
-	--aark-notification-z: 10000;
-	--aark-close-color: #666;
-	--aark-close-hover: #f5f5f5;
-	--aark-anim: 0.2s;
+  /* Overlay */
+  --aark-modal-overlay-bg: rgba(0, 0, 0, 0.5);
+  --aark-modal-overlay-blur: 0px;
+
+  /* Modal */
+  --aark-modal-bg: #fff;
+  --aark-modal-radius: 8px;
+  --aark-modal-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+  --aark-modal-pad: 16px;
+  --aark-modal-max-width: 700px;
+  --aark-modal-z: 9999;
+
+  /* Close button */
+  --aark-close-color: #666;
+  --aark-close-hover: #f5f5f5;
+  --aark-close-hover-color: #333;
+  --aark-close-focus-outline: 2px solid #007bff;
+
+  /* Notification */
+  --aark-notification-bg: #fff;
+  --aark-notification-radius: 8px;
+  --aark-notification-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  --aark-notification-pad: 16px;
+  --aark-notification-z: 10000;
+
+  /* Animation */
+  --aark-anim: 0.2s;
 }
 ```
 
-### CSS Import Options
+### `setAarkModalTheme(theme)` — apply theme via JS
 
-**Option 1: Automatic (Default)**
+```tsx
+import { setAarkModalTheme } from "aark-react-modalify";
 
-```jsx
-import { aark } from "aark-react-modalify";
-// CSS is included automatically
-```
-
-**Option 2: Manual Import**
-
-```jsx
-import { aark } from "aark-react-modalify/no-styles";
-import "aark-react-modalify/css";
-```
-
-## 🔧 Advanced Usage
-
-### Using with Hooks
-
-```jsx
-import { useModal } from "aark-react-modalify";
-
-function MyComponent() {
-	const { openModal, closeModal, isOpen } = useModal();
-
-	const handleOpen = () => {
-		openModal(<div>My modal content</div>, { position: "center" });
-	};
-
-	return (
-		<div>
-			<button onClick={handleOpen}>Open Modal</button>
-			{isOpen && <p>Modal is currently open</p>}
-		</div>
-	);
-}
-```
-
-### Theme Management
-
-```jsx
-import { setAarkModalTheme, resetAarkModalTheme } from "aark-react-modalify";
-
-// Apply custom theme
 setAarkModalTheme({
-	modalBg: "#1f2937",
-	modalRadius: "12px",
-	animationDuration: "0.3s",
-});
+  // Overlay
+  overlayBackground: "rgba(0, 0, 0, 0.7)",
+  overlayBlur: "4px",
 
-// Reset to defaults
+  // Modal
+  modalBackground: "#1f2937",
+  modalBorderRadius: "12px",
+  modalShadow: "0 20px 60px rgba(0, 0, 0, 0.4)",
+  modalPadding: "24px",
+  modalMaxWidth: "600px",
+  modalZIndex: 9999,
+
+  // Close button
+  closeButtonColor: "#9ca3af",
+  closeButtonHoverBackground: "rgba(255,255,255,0.1)",
+  closeButtonHoverColor: "#fff",
+
+  // Notification
+  notificationBackground: "#111827",
+  notificationBorderRadius: "8px",
+  notificationShadow: "0 4px 20px rgba(0,0,0,0.3)",
+  notificationPadding: "12px 16px",
+  notificationZIndex: 10000,
+
+  // Animation
+  animationDuration: "0.3s",
+});
+```
+
+### `resetAarkModalTheme()` — restore defaults
+
+```tsx
+import { resetAarkModalTheme } from "aark-react-modalify";
+
 resetAarkModalTheme();
 ```
 
-## 💡 Examples
+### `getAarkModalTheme()` — read current values
 
-### Success Modal
+```tsx
+import { getAarkModalTheme } from "aark-react-modalify";
 
-```jsx
+const theme = getAarkModalTheme();
+console.log(theme.modalBackground); // e.g. "#fff"
+```
+
+---
+
+## CSS Import Options
+
+**Option 1 — Automatic (default)**
+
+```tsx
+import { aark } from "aark-react-modalify";
+// CSS is bundled automatically
+```
+
+**Option 2 — Manual (no-styles build)**
+
+```tsx
+import { aark } from "aark-react-modalify/no-styles";
+import "aark-react-modalify/css";
+// or: import "aark-react-modalify/dist/aark-react-modalify.css";
+```
+
+---
+
+## Advanced Usage
+
+### `useModal` hook
+
+```tsx
+import { useModal } from "aark-react-modalify";
+
+function MyComponent() {
+  const { openModal, closeModal, isOpen } = useModal();
+
+  return (
+    <div>
+      <button onClick={() => openModal(<div>Content</div>, { position: "center" })}>
+        Open
+      </button>
+      {isOpen && <p>Modal is open</p>}
+    </div>
+  );
+}
+```
+
+### Manual component integration
+
+```tsx
+import { Modal, Notification, ModalProvider } from "aark-react-modalify";
+```
+
+---
+
+## Examples
+
+### Success modal
+
+```tsx
 aark.fire({
-	title: "Success!",
-	text: "Your data has been saved successfully.",
-	type: "success",
-	confirmText: "Great!",
+  title: "Saved!",
+  text: "Your changes have been saved successfully.",
+  type: "success",
+  confirmText: "Great!",
 });
 ```
 
-### Confirmation Dialog
+### Confirmation dialog
 
-```jsx
+```tsx
 aark.fire({
-	title: "Delete Item",
-	text: "This action cannot be undone.",
-	type: "warning",
-	showCancelButton: true,
-	confirmText: "Yes, delete it!",
-	cancelText: "Cancel",
-	onConfirm: () => console.log("Item deleted"),
+  title: "Delete Item",
+  text: "This action cannot be undone.",
+  type: "warning",
+  showCancelButton: true,
+  confirmText: "Yes, delete it!",
+  cancelText: "Cancel",
+  onConfirm: () => console.log("deleted"),
 });
 ```
 
-### Error Notification
+### Error notification (top-right, 4 s)
 
-```jsx
+```tsx
 aark.notification({
-	title: "Error",
-	text: "Something went wrong. Please try again.",
-	type: "error",
-	timer: 4000,
+  title: "Error",
+  text: "Something went wrong. Please try again.",
+  type: "error",
+  timer: 4000,
+  position: "top-right",
 });
 ```
 
-## 🌐 Framework Compatibility
+### Large custom modal
 
-- ✅ **Vite** - CSS automatically processed
-- ✅ **Create React App** - Styles included in bundle
-- ✅ **Next.js** - Works with both App and Pages router
-- ✅ **Webpack** - CSS automatically bundled
-- ✅ **Parcel** - Styles processed automatically
+```tsx
+aark.fire(<Dashboard />, {
+  size: "xl",
+  showCloseIcon: true,
+  preventOverlayClose: true,
+});
+```
 
-## 📊 Bundle Size
+---
 
-- **JavaScript**: ~16 kB (minified)
-- **CSS**: ~9 kB (minified)
-- **Total**: ~25 kB
-- **Gzipped**: ~8 kB (estimated)
+## Framework Compatibility
 
-## 🆚 Component vs Props-Based
+| Framework         | Support |
+| ----------------- | ------- |
+| Vite              | ✅       |
+| Next.js (App + Pages router) | ✅ |
+| Create React App  | ✅       |
+| Webpack           | ✅       |
+| Parcel            | ✅       |
 
-| Feature         | Component-Based             | Props-Based                 |
-| --------------- | --------------------------- | --------------------------- |
-| **Flexibility** | Complete control over JSX   | Predefined templates        |
-| **Ease of Use** | Requires React knowledge    | Simple object configuration |
-| **Styling**     | Full CSS control            | Built-in styled templates   |
-| **Best for**    | Complex UIs, custom designs | Quick alerts, confirmations |
+---
 
-## 📄 License
+## Bundle Size
 
-MIT License - see the [LICENSE](LICENSE) file for details.
+| Asset      | Size (minified) |
+| ---------- | --------------- |
+| JavaScript | ~16 kB          |
+| CSS        | ~5 kB           |
+| **Total**  | **~21 kB**      |
+| Gzipped    | ~7 kB (est.)    |
 
-## 🤝 Contributing
+---
 
-Contributions are welcome! Please feel free to submit a Pull Request.
+## License
+
+MIT — see [LICENSE](LICENSE) for details.
 
 ---
 
