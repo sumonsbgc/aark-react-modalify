@@ -2,7 +2,7 @@ import type { FC, MouseEvent } from 'react';
 import { useEffect, useCallback } from 'react';
 import { createPortal } from 'react-dom';
 import type { NotificationConfig } from '../types';
-import '../assets/styles/aark-modal.css';
+// Note: CSS is NOT imported here — only src/index.ts imports CSS.
 import StandardNotification from './notifications/StandardNotification';
 import { getModalRoot } from '../utils/modal-root';
 
@@ -21,34 +21,25 @@ const Notification: FC<NotificationProps> = ({ config, onClose }) => {
     preventEscClose = false,
   } = options;
 
-  // CSS is now imported at the top of the file
-  // useEffect(() => {
-  //   injectStyles(MODAL_CSS, 'aark-modal-styles');
-  // }, []);
-
-  // Handle auto close for notifications (only for component-based notifications)
+  // Auto close — only for component-based notifications (props-based handle timer internally)
   useEffect(() => {
-    if (autoCloseTime && !props) { // Only auto-close component-based notifications
+    if (autoCloseTime && !props) {
       const timer = setTimeout(onClose, autoCloseTime);
       return () => clearTimeout(timer);
     }
   }, [autoCloseTime, onClose, props]);
 
-  // Handle keyboard events
+  // Keyboard ESC
   useEffect(() => {
+    if (preventEscClose) return;
     const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === 'Escape' && !preventEscClose) {
-        onClose();
-      }
+      if (event.key === 'Escape') onClose();
     };
-
-    if (!preventEscClose) {
-      document.addEventListener('keydown', handleKeyDown);
-      return () => document.removeEventListener('keydown', handleKeyDown);
-    }
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
   }, [onClose, preventEscClose]);
 
-  // Handle close button click
+  // Close button click
   const handleCloseClick = useCallback(
     (event: MouseEvent) => {
       event.stopPropagation();
@@ -58,53 +49,40 @@ const Notification: FC<NotificationProps> = ({ config, onClose }) => {
   );
 
   const contentClasses = `aark-notification-container ${position} ${className}`.trim();
-
-  // Get the single modal root container (shared with modals)
   const modalContainer = getModalRoot();
 
-  // Get position styles
-  const getPositionStyles = () => {
-    const baseStyles = {
-      position: 'fixed' as const,
+  const getPositionStyles = (): React.CSSProperties => {
+    const base: React.CSSProperties = {
+      position: 'fixed',
       zIndex: 10000,
       margin: '1rem',
     };
-
     switch (position) {
-      case 'top-left':
-        return { ...baseStyles, top: 0, left: 0 };
-      case 'top-center':
-        return { ...baseStyles, top: 0, left: '50%', transform: 'translateX(-50%)' };
-      case 'top-right':
-        return { ...baseStyles, top: 0, right: 0 };
-      case 'bottom-left':
-        return { ...baseStyles, bottom: 0, left: 0 };
-      case 'bottom-center':
-        return { ...baseStyles, bottom: 0, left: '50%', transform: 'translateX(-50%)' };
-      case 'bottom-right':
-        return { ...baseStyles, bottom: 0, right: 0 };
-      default:
-        return { ...baseStyles, top: 0, right: 0 };
+      case 'top-left':    return { ...base, top: 0, left: 0 };
+      case 'top-center':  return { ...base, top: 0, left: '50%', transform: 'translateX(-50%)' };
+      case 'top-right':   return { ...base, top: 0, right: 0 };
+      case 'bottom-left': return { ...base, bottom: 0, left: 0 };
+      case 'bottom-center': return { ...base, bottom: 0, left: '50%', transform: 'translateX(-50%)' };
+      case 'bottom-right': return { ...base, bottom: 0, right: 0 };
+      default:            return { ...base, top: 0, right: 0 };
     }
   };
 
-  // Render content based on whether it's props-based or component-based
   const renderContent = () => {
     if (props) {
-      // Props-based notification
       return (
         <div className="aark-notification-wrapper">
           <StandardNotification props={props} onClose={onClose} />
         </div>
       );
-    } else if (content) {
-      // Component-based notification (existing behavior)
+    }
+
+    if (content) {
       return (
         <div
           className={contentClasses}
           role="alert"
           aria-live="polite"
-          aria-labelledby="aark-notification-content"
         >
           {showCloseIcon && (
             <button
@@ -116,12 +94,13 @@ const Notification: FC<NotificationProps> = ({ config, onClose }) => {
               ×
             </button>
           )}
-          <div id="aark-notification-body" className="aark-notification-body">
+          <div className="aark-notification-body">
             {content}
           </div>
         </div>
       );
     }
+
     return null;
   };
 

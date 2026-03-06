@@ -9,6 +9,7 @@ export type {
 	NotificationPosition,
 	ModalMode,
 	ModalType,
+	ModalSize,
 	ModalProps,
 	NotificationProps,
 	ModalConfig,
