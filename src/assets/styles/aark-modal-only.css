@@ -110,6 +110,15 @@
   margin: 1rem 0;
 }
 
+/**
+ * Re-adds the standard body padding to a child section.
+ * Useful when bodyPadding: false is set and you need padding
+ * on the content area but not on the header/footer.
+ */
+.aark-body-pad {
+  padding: var(--aark-modal-pad);
+}
+
 /* Modal footer */
 .aark-modal-footer {
   display: flex;

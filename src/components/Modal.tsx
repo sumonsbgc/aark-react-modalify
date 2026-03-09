@@ -34,6 +34,7 @@ const Modal: FC<ModalProps> = ({ config, onClose }) => {
     width,
     maxWidth,
     size,
+    bodyPadding,
   } = options;
 
   // Keyboard ESC handling
@@ -89,6 +90,14 @@ const Modal: FC<ModalProps> = ({ config, onClose }) => {
     return style;
   }, [width, maxWidth, size]);
 
+  // Resolve bodyPadding → inline style for .aark-modal-body
+  const bodyPaddingStyle = useMemo((): React.CSSProperties => {
+    if (bodyPadding === undefined || bodyPadding === true) return {};
+    if (bodyPadding === false || bodyPadding === 0) return { padding: 0 };
+    if (typeof bodyPadding === 'number') return { padding: `${bodyPadding}px` };
+    return { padding: bodyPadding };
+  }, [bodyPadding]);
+
   const contentClasses = `aark-modal-container ${position} ${className}`.trim();
   const modalContainer = getModalRoot();
 
@@ -129,7 +138,7 @@ const Modal: FC<ModalProps> = ({ config, onClose }) => {
           aria-modal="true"
           onClick={(e) => e.stopPropagation()}
         >
-          <div className="aark-modal-body">
+          <div className="aark-modal-body" style={bodyPaddingStyle}>
             {showCloseIcon && (
               <button
                 onClick={handleCloseClick}

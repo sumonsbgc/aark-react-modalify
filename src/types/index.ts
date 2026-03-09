@@ -103,6 +103,14 @@ export interface ModalOptions extends BaseOptions {
 	width?: string | number;
 	/** Explicit max-width (e.g. '600px', '90vw'). Overrides size preset. */
 	maxWidth?: string | number;
+	/**
+	 * Controls padding on the modal body card (component-based modals only).
+	 * - true / omitted → default CSS var (--aark-modal-pad, 16px)
+	 * - false | 0       → no padding (useful when header/footer need edge-to-edge borders)
+	 * - number          → px value  e.g. 24
+	 * - string          → any CSS value e.g. '8px 16px'
+	 */
+	bodyPadding?: boolean | string | number;
 }
 
 export interface NotificationOptions extends BaseOptions {

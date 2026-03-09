@@ -11,6 +11,7 @@ A lightweight, flexible React modal and notification library with TypeScript sup
 - **TypeScript** — full type safety out of the box
 - **Dual API** — pass raw JSX _or_ a plain props object
 - **Size presets** — `sm / md / lg / xl / full` with explicit `width` / `maxWidth` override
+- **Body padding control** — `bodyPadding` option lets header/footer borders span edge-to-edge
 - **Responsive** — adapts automatically on tablet and mobile
 - **CSS variables** — theme every visual property without touching JS
 - **Imperative** — call `aark.fire()` / `aark.notification()` anywhere, no context required
@@ -186,17 +187,18 @@ aark.getTheme();       // same as getAarkModalTheme()
 
 ### `ModalOptions`
 
-| Option                | Type             | Default    | Description                              |
-| --------------------- | ---------------- | ---------- | ---------------------------------------- |
-| `position`            | `ModalPosition`  | `"center"` | Where the modal appears                  |
-| `size`                | `ModalSize`      | —          | Preset max-width (`sm/md/lg/xl/full`)    |
-| `width`               | `string\|number` | —          | Explicit width, overrides `size`         |
-| `maxWidth`            | `string\|number` | —          | Explicit max-width, overrides `size`     |
-| `showCloseIcon`       | `boolean`        | `true`     | Render the × close button                |
-| `className`           | `string`         | —          | Extra class on the modal container       |
-| `overlayClassName`    | `string`         | —          | Extra class on the backdrop              |
-| `preventOverlayClose` | `boolean`        | `false`    | Disable close on backdrop click          |
-| `preventEscClose`     | `boolean`        | `false`    | Disable close on ESC key                 |
+| Option                | Type                          | Default    | Description                                                                 |
+| --------------------- | ----------------------------- | ---------- | --------------------------------------------------------------------------- |
+| `position`            | `ModalPosition`               | `"center"` | Where the modal appears                                                     |
+| `size`                | `ModalSize`                   | —          | Preset max-width (`sm/md/lg/xl/full`)                                       |
+| `width`               | `string\|number`              | —          | Explicit width, overrides `size`                                            |
+| `maxWidth`            | `string\|number`              | —          | Explicit max-width, overrides `size`                                        |
+| `bodyPadding`         | `boolean\|string\|number`     | `true`     | Body card padding — see [bodyPadding](#bodypaddingcontrolling-body-padding) |
+| `showCloseIcon`       | `boolean`                     | `true`     | Render the × close button                                                   |
+| `className`           | `string`                      | —          | Extra class on the modal container                                          |
+| `overlayClassName`    | `string`                      | —          | Extra class on the backdrop                                                 |
+| `preventOverlayClose` | `boolean`                     | `false`    | Disable close on backdrop click                                             |
+| `preventEscClose`     | `boolean`                     | `false`    | Disable close on ESC key                                                    |
 
 ### `NotificationOptions`
 
@@ -248,6 +250,48 @@ type NotificationPosition =
 ---
 
 ## Customization
+
+### `bodyPadding` — controlling body padding
+
+By default the modal body card has `padding: var(--aark-modal-pad)` (16 px) on all sides. This means any `border-top` or `border-bottom` you add to a header or footer **inside** your content will be indented — it won't reach the card edges.
+
+Use `bodyPadding` to control this:
+
+| Value           | Result                                    |
+| --------------- | ----------------------------------------- |
+| `true` (default)| Default CSS variable padding (`16px`)     |
+| `false` or `0`  | No padding — borders span edge-to-edge    |
+| `number`        | Exact px value, e.g. `24` → `24px`        |
+| `string`        | Any CSS value, e.g. `'8px 20px'`          |
+
+**Pattern — full-width header/footer borders with padded content:**
+
+```tsx
+aark.fire(
+  <div>
+    {/* Header — border goes edge-to-edge */}
+    <div style={{ padding: "12px 16px", borderBottom: "1px solid #e5e7eb" }}>
+      <h3 style={{ margin: 0 }}>Modal Title</h3>
+    </div>
+
+    {/* Content — add padding back only here */}
+    <div className="aark-body-pad">
+      <p>Body content with standard padding.</p>
+    </div>
+
+    {/* Footer — border goes edge-to-edge */}
+    <div style={{ padding: "12px 16px", borderTop: "1px solid #e5e7eb", display: "flex", justifyContent: "flex-end", gap: "8px" }}>
+      <button onClick={() => aark.close()}>Cancel</button>
+      <button onClick={() => aark.close()}>Confirm</button>
+    </div>
+  </div>,
+  { bodyPadding: false }
+);
+```
+
+> **`aark-body-pad`** is a CSS utility class provided by the library. It applies `padding: var(--aark-modal-pad)` — the same value as the body default — so your content section looks identical to a normally-padded modal while header/footer remain flush.
+
+---
 
 ### CSS variables (full list with defaults)
 
@@ -471,6 +515,26 @@ aark.fire(<MyForm />, {
   maxWidth: "90vw",
   position: "top-center",
 });
+```
+
+### Modal with full-width header/footer borders
+
+```tsx
+aark.fire(
+  <div>
+    <div style={{ padding: "12px 16px", borderBottom: "1px solid #e5e7eb" }}>
+      <h3 style={{ margin: 0 }}>Confirm Action</h3>
+    </div>
+    <div className="aark-body-pad">
+      <p>Are you sure you want to proceed?</p>
+    </div>
+    <div style={{ padding: "12px 16px", borderTop: "1px solid #e5e7eb", display: "flex", justifyContent: "flex-end", gap: "8px" }}>
+      <button onClick={() => aark.close()}>Cancel</button>
+      <button onClick={() => aark.close()}>Confirm</button>
+    </div>
+  </div>,
+  { bodyPadding: false, size: "sm" }
+);
 ```
 
 ### Dark theme
