@@ -4,6 +4,42 @@
  */
 
 let modalRoot: HTMLElement | null = null;
+let bodyObserver: MutationObserver | null = null;
+
+/**
+ * Maximum safe 32-bit signed integer — the practical ceiling for z-index
+ * values in all browsers. Used as the absolute fallback so the modal layer
+ * always paints above any consumer content, regardless of their z-index.
+ */
+const MAX_Z_INDEX = 2147483647;
+
+/**
+ * Ensure the root stays at the very end of <body>. DOM order is the tiebreaker
+ * when two siblings share the same z-index (or when a consumer creates a new
+ * stacking context with an equally high z-index). Re-appending an element that
+ * is already in the DOM is a cheap move operation — React's portal keeps its
+ * children intact.
+ */
+const ensureLastChildOfBody = (root: HTMLElement): void => {
+	if (root.parentNode !== document.body || document.body.lastElementChild !== root) {
+		document.body.appendChild(root);
+	}
+};
+
+/**
+ * Watch <body> and snap the modal root back to the last position if some other
+ * script (analytics, chat widget, another portal lib) appends a sibling after
+ * it. This guarantees the modal stays above dynamically-inserted overlays.
+ */
+const startBodyObserver = (root: HTMLElement): void => {
+	if (bodyObserver || typeof MutationObserver === "undefined") return;
+	bodyObserver = new MutationObserver(() => {
+		if (document.body.lastElementChild !== root) {
+			ensureLastChildOfBody(root);
+		}
+	});
+	bodyObserver.observe(document.body, { childList: true });
+};
 
 /**
  * Gets or creates the modal root container
@@ -18,11 +54,11 @@ export const getModalRoot = (): HTMLElement => {
 		if (!modalRoot) {
 			modalRoot = document.createElement("div");
 			modalRoot.id = "aark-react-modalify-root";
-			// position:fixed always creates a stacking context even without z-index.
-			// Without an explicit z-index the root sits at z-index:auto (bottom of order),
-			// so fixed/sticky layout elements (sidebar z-10, header z-20, etc.) paint above
-			// the modal. We use the same CSS variable the overlay uses so setAarkModalTheme
-			// keeps them in sync.
+			// `isolation: isolate` forces a new stacking context that cannot be pierced
+			// by sibling stacking contexts, and `z-index: MAX_Z_INDEX` as fallback makes
+			// sure this layer paints above every consumer element — even those using
+			// extreme values like `z-[9999999]`. Consumers can still override via the
+			// --aark-modal-z CSS variable for coordinated stacking.
 			modalRoot.style.cssText = `
         position: fixed;
         top: 0;
@@ -30,12 +66,17 @@ export const getModalRoot = (): HTMLElement => {
         width: 100%;
         height: 100%;
         pointer-events: none;
-        z-index: var(--aark-modal-z, 9999);
+        isolation: isolate;
+        z-index: var(--aark-modal-z, ${MAX_Z_INDEX});
       `;
 			document.body.appendChild(modalRoot);
 		}
+
+		startBodyObserver(modalRoot);
 	}
 
+	// Always pop to the end of body so DOM order reinforces our z-index.
+	ensureLastChildOfBody(modalRoot);
 	return modalRoot;
 };
 
@@ -47,6 +88,10 @@ export const cleanupModalRoot = (): void => {
 	if (modalRoot && modalRoot.children.length === 0) {
 		modalRoot.remove();
 		modalRoot = null;
+		if (bodyObserver) {
+			bodyObserver.disconnect();
+			bodyObserver = null;
+		}
 	}
 };
 

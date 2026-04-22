@@ -165,8 +165,11 @@ const Modal: FC<ModalProps> = ({ config, onClose }) => {
       style={{
         position: 'fixed',
         inset: 0,
-        // Use CSS variable so setAarkModalTheme({ modalZIndex }) works
-        zIndex: 'var(--aark-modal-z, 9999)' as unknown as number,
+        // Layering is handled by the portal root (#aark-react-modalify-root)
+        // which already sits at the maximum z-index with its own stacking
+        // context. Inside that root the overlay only needs z-index:1 to stay
+        // below the modal card. See aark-modal-only.css for the scale.
+        zIndex: 1,
         background: 'var(--aark-modal-overlay-bg)',
         // Use CSS variable — set overlayBlur to e.g. '2px' via setAarkModalTheme
         backdropFilter: 'blur(var(--aark-modal-overlay-blur, 0px))',

@@ -54,7 +54,9 @@ const Notification: FC<NotificationProps> = ({ config, onClose }) => {
   const getPositionStyles = (): React.CSSProperties => {
     const base: React.CSSProperties = {
       position: 'fixed',
-      zIndex: 10000,
+      // Inside the portal root stacking context. 10 floats notifications
+      // above modals (overlay=1, body=2, close=3). See aark-*-only.css.
+      zIndex: 10,
       margin: '1rem',
     };
     switch (position) {

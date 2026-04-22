@@ -7,7 +7,7 @@
   --aark-modal-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
   --aark-modal-pad: 16px;
   --aark-modal-max-width: 700px;
-  --aark-modal-z: 9999;
+  --aark-modal-z: 2147483647;
   --aark-close-color: #666;
   --aark-close-hover: #f5f5f5;
   --aark-close-hover-color: #333;
@@ -16,10 +16,12 @@
 }
 
 /* Modal overlay */
+/* Inside #aark-react-modalify-root (already at max z-index, isolation: isolate).
+   Internal scale: overlay(1) < body(2) < close(3) < notification(10) < notification-close(11). */
 .aark-modal-overlay {
   position: fixed;
   inset: 0;
-  z-index: var(--aark-modal-z);
+  z-index: 1;
   pointer-events: auto;
 }
 
@@ -43,13 +45,27 @@
 }
 
 /* Position animations */
-.aark-modal-container.center       { animation: scale-in var(--aark-anim); }
-.aark-modal-container.top-center   { animation: slide-down var(--aark-anim); }
-.aark-modal-container.top-right    { animation: slide-left var(--aark-anim); }
-.aark-modal-container.top-left     { animation: slide-right var(--aark-anim); }
-.aark-modal-container.bottom-right { animation: slide-left var(--aark-anim); }
-.aark-modal-container.bottom-left  { animation: slide-right var(--aark-anim); }
-.aark-modal-container.bottom-center{ animation: slide-up var(--aark-anim); }
+.aark-modal-container.center {
+  animation: scale-in var(--aark-anim);
+}
+.aark-modal-container.top-center {
+  animation: slide-down var(--aark-anim);
+}
+.aark-modal-container.top-right {
+  animation: slide-left var(--aark-anim);
+}
+.aark-modal-container.top-left {
+  animation: slide-right var(--aark-anim);
+}
+.aark-modal-container.bottom-right {
+  animation: slide-left var(--aark-anim);
+}
+.aark-modal-container.bottom-left {
+  animation: slide-right var(--aark-anim);
+}
+.aark-modal-container.bottom-center {
+  animation: slide-up var(--aark-anim);
+}
 
 /* Modal header */
 .aark-modal-header {
@@ -77,7 +93,7 @@
   font-size: 14px;
   line-height: 1;
   transition: all var(--aark-anim);
-  z-index: 10;
+  z-index: 3;
 }
 .aark-modal-close:hover {
   background: var(--aark-close-hover);
@@ -176,7 +192,9 @@
 }
 
 /* StandardModal internals */
-.aark-standard-modal .aark-modal-header { margin-bottom: 1rem; }
+.aark-standard-modal .aark-modal-header {
+  margin-bottom: 1rem;
+}
 
 .aark-standard-modal .aark-modal-title {
   margin: 0;
@@ -186,7 +204,10 @@
   text-align: center;
 }
 
-.aark-standard-modal .aark-modal-content { flex: 1; margin: 1rem 0; }
+.aark-standard-modal .aark-modal-content {
+  flex: 1;
+  margin: 1rem 0;
+}
 
 .aark-standard-modal .aark-modal-icon {
   text-align: center;
@@ -229,31 +250,69 @@
   background: #f9fafb;
   border-color: #9ca3af;
 }
-.aark-standard-modal .aark-modal-confirm-button { color: #ffffff; }
-.aark-standard-modal .aark-modal-confirm-button:hover { opacity: 0.9; }
+.aark-standard-modal .aark-modal-confirm-button {
+  color: #ffffff;
+}
+.aark-standard-modal .aark-modal-confirm-button:hover {
+  opacity: 0.9;
+}
 
 /* Animations */
 @keyframes fade-in {
-  0%  { opacity: 0; }
-  to  { opacity: 1; }
+  0% {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 @keyframes scale-in {
-  0%  { opacity: 0; transform: scale(0.9); }
-  to  { opacity: 1; transform: scale(1); }
+  0% {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
 }
 @keyframes slide-down {
-  0%  { opacity: 0; transform: translateY(-20px); }
-  to  { opacity: 1; transform: translateY(0); }
+  0% {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 @keyframes slide-up {
-  0%  { opacity: 0; transform: translateY(20px); }
-  to  { opacity: 1; transform: translateY(0); }
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 @keyframes slide-left {
-  0%  { opacity: 0; transform: translateX(20px); }
-  to  { opacity: 1; transform: translateX(0); }
+  0% {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
 }
 @keyframes slide-right {
-  0%  { opacity: 0; transform: translateX(-20px); }
-  to  { opacity: 1; transform: translateX(0); }
+  0% {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
 }
